@@ -1,4 +1,4 @@
-# Events Visualizer GPTI
+# FundingMe
 
 Crowdfunding for social purposes
 
