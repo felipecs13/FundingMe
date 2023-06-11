@@ -17,3 +17,15 @@ This gidelines makes us all work with ease and understand others code :yum:
 | **Name**        | **GitHub Username**                           | **Email**             |
 | --------------- | --------------------------------------------- | --------------------- |
 | Felipe Carrasco | [felipecs13](https://github.com/felipecs13)   | felipecs13@uc.cl      |
+| Belén Madariaga | [BelenMadariaga](https://github.com/BelenMadariaga)   | mbmadariaga@uc.cl      |
+| Hernán | Usuario de Hernán   | Correo de Hernán     |
+
+## Run
+
+Code to run the project
+
+```bash
+yarn install # to install dependencies
+yarn add <dependency> # to add a dependency
+yarn dev # to run the project
+```
