@@ -7,9 +7,9 @@ const Router = () => {
     {
       path: '/',
       element: <Layout />,
-      errorElement: <NotFound />
-    }
-    ])
+      errorElement: <NotFound />,
+    },
+  ])
   return <RouterProvider router={router} />
 }
 
