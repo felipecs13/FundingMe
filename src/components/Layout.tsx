@@ -13,9 +13,11 @@ const Layout = () => (
       <BoldText>FundingMe</BoldText>
     </Logo>
     <ContainerLinks>
+      <Link to={'/'}>Inicio</Link>
       <Link to={'/me'}>Mi perfil</Link>
       <Link to={'/projects'}>Mis proyectos</Link>
       <Link to={'/dashboard'}>Explorar</Link>
+      <Link to={'/new'}>Crear Proyecto</Link>
     </ContainerLinks>
   </Wrapper>
 )
