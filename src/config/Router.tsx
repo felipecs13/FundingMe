@@ -1,6 +1,7 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Form, RouterProvider } from 'react-router-dom'
 import Layout from '../components/Layout'
 import NotFound from '../components/NotFound'
+import FormProject from '../components/form'
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -9,6 +10,11 @@ const Router = () => {
       element: <Layout />,
       errorElement: <NotFound />,
     },
+    {
+      path: '/new',
+      element: <FormProject />,
+      errorElement: <NotFound />,
+    }
   ])
   return <RouterProvider router={router} />
 }

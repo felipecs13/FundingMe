@@ -16,6 +16,7 @@ const Layout = () => (
       <Link to={'/me'}>Mi perfil</Link>
       <Link to={'/projects'}>Mis proyectos</Link>
       <Link to={'/dashboard'}>Explorar</Link>
+      <Link to={'/new'}>Crear Proyecto</Link>
     </ContainerLinks>
   </Wrapper>
 )
