@@ -16,15 +16,6 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
   }
-  a {
-    font-size: 16px;
-    font-weight: 500;
-    color: ${colors.background};
-    text-decoration: inherit;
-  }
-  a:hover {
-    color: ${colors.fontColor};
-  }
 `
 
 export default GlobalStyle

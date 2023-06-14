@@ -13,11 +13,11 @@ const Layout = () => (
       <BoldText>FundingMe</BoldText>
     </Logo>
     <ContainerLinks>
-      <Link to={'/'}>Inicio</Link>
-      <Link to={'/me'}>Mi perfil</Link>
-      <Link to={'/projects'}>Mis proyectos</Link>
-      <Link to={'/dashboard'}>Explorar</Link>
-      <Link to={'/new'}>Crear Proyecto</Link>
+      <StyledLink to={'/'}>Inicio</StyledLink>
+      <StyledLink to={'/me'}>Mi perfil</StyledLink>
+      <StyledLink to={'/projects'}>Mis proyectos</StyledLink>
+      <StyledLink to={'/dashboard'}>Explorar</StyledLink>
+      <StyledLink to={'/new'}>Crear Proyecto</StyledLink>
     </ContainerLinks>
   </Wrapper>
 )
@@ -55,6 +55,17 @@ const ContainerLinks = styled.div`
   width: 100%;
   justify-content: flex-end;
   gap: 2rem;
+`
+
+const StyledLink = styled(Link)`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${colors.background};
+  text-decoration: inherit;
+
+  &:hover {
+    color: ${colors.fontColor};
+  }
 `
 
 export default Layout
