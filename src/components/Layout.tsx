@@ -2,10 +2,16 @@ import styled from 'styled-components'
 import LogoImg from '../assets/logo_white.png'
 import { Link } from 'react-router-dom'
 import { colors } from '../styles/constants'
+import { motion } from 'framer-motion'
+
+// const function that redirects to the home page
+const goToHome = () => {
+  window.location.href = '/'
+}
 
 const Layout = () => (
   <Wrapper>
-    <Logo>
+    <Logo onClick={goToHome} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <Img
         src={LogoImg}
         alt="Logo"
@@ -31,12 +37,13 @@ const Wrapper = styled.div`
   padding: 0 3rem;
 `
 
-const Logo = styled.div`
+const Logo = styled(motion.div)`
   display: flex;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: 80%;
   gap: 10px;
+  cursor: pointer;
 `
 
 const Img = styled.img`
