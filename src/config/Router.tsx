@@ -4,6 +4,7 @@ import NotFound from '../components/NotFound'
 import FormProject from '../views/NewProject'
 import Login from '../views/Login'
 import Register from '../views/Register'
+import Dashboard from '../views/Dashboard'
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -12,6 +13,10 @@ const Router = () => {
       element: <Layout />,
       errorElement: <NotFound />,
       children: [
+        {
+          path: '/',
+          element: <Dashboard />,
+        },
         {
           path: 'new',
           element: <FormProject />,
@@ -28,6 +33,11 @@ const Router = () => {
       element: <Register />,
       errorElement: <NotFound />,
     },
+    {
+      path: '/projects',
+      element: <Dashboard />,
+      errorElement: <NotFound />,
+    }
   ])
   return <RouterProvider router={router} />
 }

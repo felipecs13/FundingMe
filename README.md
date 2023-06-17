@@ -18,7 +18,7 @@ This gidelines makes us all work with ease and understand others code :yum:
 | --------------- | --------------------------------------------- | --------------------- |
 | Felipe Carrasco | [felipecs13](https://github.com/felipecs13)   | felipecs13@uc.cl      |
 | Belén Madariaga | [BelenMadariaga](https://github.com/BelenMadariaga)   | mbmadariaga@uc.cl      |
-| Hernán | Usuario de Hernán   | Correo de Hernán     |
+| Hernán Larraín  | [hlarrainq](https://github.com/hlarrainq)   | hlarrainq@uc.cl     |
 
 ## Run
 
