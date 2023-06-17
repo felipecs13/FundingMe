@@ -113,8 +113,6 @@ const Login = () => {
                 max={maxPrice}
                 defaultValue={[minPrice, maxPrice]}
                 onChange={(value) => setPriceRange(value)}
-                trackStyle={{ backgroundColor: colors.primary }}
-                handleStyle={{ borderColor: colors.primary }}
               />
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
