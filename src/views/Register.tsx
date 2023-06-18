@@ -56,6 +56,7 @@ const Register = () => {
       window.location.href = '/'
     } catch (error) {
       setLoading(false)
+      console.log(loading)
       console.log('Error:', error)
     }
   }
