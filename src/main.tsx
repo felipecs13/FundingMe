@@ -4,8 +4,8 @@ import Router from './config/Router.tsx'
 import GlobalStyle from './styles/GlobalStyles.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  <div>
     <GlobalStyle />
     <Router />
-  </React.StrictMode>
+  </div>
 )

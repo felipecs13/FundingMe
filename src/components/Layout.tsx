@@ -3,30 +3,51 @@ import LogoImg from '../assets/logo_white.png'
 import { Link } from 'react-router-dom'
 import { colors } from '../styles/constants'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
-// const function that redirects to the home page
-const goToHome = () => {
-  window.location.href = '/'
-}
 
-const Layout = () => (
-  <Wrapper>
-    <Logo onClick={goToHome} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-      <Img
-        src={LogoImg}
-        alt="Logo"
-      />
-      <BoldText>FundingMe</BoldText>
-    </Logo>
-    <ContainerLinks>
-      <StyledLink to={'/'}>Inicio</StyledLink>
-      <StyledLink to={'/me'}>Mi perfil</StyledLink>
-      <StyledLink to={'/projects'}>Mis proyectos</StyledLink>
-      <StyledLink to={'/dashboard'}>Explorar</StyledLink>
-      <StyledLink to={'/new'}>Crear Proyecto</StyledLink>
-    </ContainerLinks>
-  </Wrapper>
-)
+const Layout = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const goToHome = () => {
+    window.location.href = '/'
+  }
+
+  const logOut = () => {
+    // Ask the user if they are sure
+    const confirm = window.confirm('¿Estás seguro de que quieres cerrar sesión?')
+    if (confirm) {
+      localStorage.removeItem('user');
+      setUser(null);
+      window.location.href = '/'
+    }
+  }
+
+  return (
+    <Wrapper>
+      <Logo onClick={goToHome} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <Img src={LogoImg} alt="Logo" />
+        <BoldText>FundingMe</BoldText>
+      </Logo>
+      <ContainerLinks>
+        <StyledLink to={'/'}>Inicio</StyledLink>
+        {user && <StyledLink to={'/me'}>Mi perfil</StyledLink>}
+        {user && <StyledLink to={'/projects'}>Mis proyectos</StyledLink>}
+        {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
+        {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
+        {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
+        {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
+      </ContainerLinks>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,6 +90,18 @@ const StyledLink = styled(Link)`
   font-weight: 500;
   color: ${colors.background};
   text-decoration: inherit;
+
+  &:hover {
+    color: ${colors.fontColor};
+  }
+`
+
+const StyledText = styled.div`
+  font-size: 16px;
+  font-weight: 500; 
+  color: ${colors.background};  
+  text-decoration: inherit;
+  cursor: pointer;
 
   &:hover {
     color: ${colors.fontColor};

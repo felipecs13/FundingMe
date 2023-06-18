@@ -1,10 +1,11 @@
 import styled from 'styled-components'
-import { useState } from 'react'
-import { colors } from '../styles/constants'
-import { Form, Button, Input, Slider } from 'antd'
+import { useState, useEffect } from 'react'
+import { colors, apiUrl } from '../styles/constants'
+import { Form, Button, Input, Slider, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
+import NavBar from '../components/Layout'
 
 const fixNumber = (number : number) => {
   return "$" + Number(number).toLocaleString('es-AR');
@@ -12,83 +13,89 @@ const fixNumber = (number : number) => {
 
 const Login = () => {
 
-  const projects = [
-    {
-      name: "Construyendo Sonrisas",
-      description: "Construyendo Sonrisas es un proyecto que tiene como objetivo brindar asistencia médica y dental gratuita a comunidades de escasos recursos. Queremos proporcionar servicios de salud bucal y tratamientos médicos básicos para mejorar la calidad de vida de las personas.",
-      goalAmount: 500000,
-      collectedAmount: 250000,
-      image: "https://source.unsplash.com/800x600/?smile",
-    },
-    {
-      name: "Educación para Todos",
-      description: "Educación para Todos es una iniciativa que busca proveer materiales educativos y recursos didácticos a escuelas rurales en zonas remotas. Nuestro objetivo es garantizar que los niños tengan acceso a una educación de calidad, independientemente de su ubicación geográfica.",
-      goalAmount: 300000,
-      collectedAmount: 120000,
-      image: "https://source.unsplash.com/800x600/?education",
-    },
-    {
-      name: "Alimentando Esperanzas",
-      description: "Alimentando Esperanzas es un proyecto que tiene como meta combatir la malnutrición infantil en comunidades vulnerables. A través de programas de alimentación balanceada y educación nutricional, buscamos mejorar la salud y el bienestar de los niños y sus familias.",
-      goalAmount: 800000,
-      collectedAmount: 400000,
-      image: "https://source.unsplash.com/800x600/?kids",
-    },
-    {
-      name: "Hogar Seguro",
-      description: "Hogar Seguro es una iniciativa que se dedica a brindar refugio y apoyo a mujeres y niños víctimas de violencia doméstica. Nuestro objetivo es proporcionar un entorno seguro y empoderador, además de ofrecer servicios de asesoramiento y capacitación para fomentar la autonomía de las sobrevivientes.",
-      goalAmount: 200000,
-      collectedAmount: 80000,
-      image: "https://source.unsplash.com/800x600/?home",
-    },
-    {
-      name: "Cultivando Oportunidades",
-      description: "Cultivando Oportunidades es un proyecto que promueve la agricultura sostenible en comunidades rurales. Buscamos enseñar técnicas de cultivo ecológicas, impulsar el emprendimiento agrícola y mejorar las condiciones de vida de los agricultores, fomentando la seguridad alimentaria y el desarrollo económico local.",
-      goalAmount: 400000,
-      collectedAmount: 300000,
-      image: "https://source.unsplash.com/800x600/?agriculture",
-    },
-    {
-      name: "Arte en Acción",
-      description: "Arte en Acción es una iniciativa que busca llevar actividades artísticas y culturales a niños y jóvenes en situaciones de vulnerabilidad. A través de talleres de pintura, música y danza, buscamos fomentar la creatividad, fortalecer la autoestima y promover la inclusión social.",
-      goalAmount: 600000,
-      collectedAmount: 450000,
-      image: "https://source.unsplash.com/800x600/?art",
-    },
-  ];
+  const [loading, setLoading] = useState<boolean>(true)
+  const [projects, setProjects] = useState<any[]>([])
+  const [user, setUser] = useState<any>(null)
 
-  const minPrice = Math.min(...projects.map((project) => project.goalAmount));
-  const maxPrice = Math.max(...projects.map((project) => project.goalAmount));
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch(apiUrl + '/projects')
+      const data = await response.json()
+      setProjects(data)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
+  useEffect(() => {
+    fetchProjects()
+
+    const user = localStorage.getItem('user')
+    if (user) {
+      setUser(JSON.parse(user))
+      console.log(user)
+    }
+  }, [])
+
+  const minPrice = projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0;
+  const maxPrice = projects.length > 0 ? Math.max(...projects.map((project) => project.goal_amount)) : 1000;
+  
   const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-  const [filteredPriceRange, setFilteredPriceRange] = useState([minPrice, maxPrice]);
+  const [filteredPriceRange, setFilteredPriceRange] = useState([0, 0]);
   const [searchText, setSearchText] = useState("");
+  const [minDonationRequired, setMinDonationRequired] = useState(0);
+  const [filterMinDonationRequired, setFilterMinDonationRequired] = useState(0);
   const [filteredSearchText, setFilteredSearchText] = useState("");
 
   const handleFilterButton = () => {
     setFilteredPriceRange(priceRange);
     setFilteredSearchText(searchText);
+    setFilterMinDonationRequired(minDonationRequired);
   };
 
-  const filteredProjects = projects
-    .filter((project) => project.goalAmount >= filteredPriceRange[0] && project.goalAmount <= filteredPriceRange[1])
-    .filter((project) => project.name.toLowerCase().includes(filteredSearchText.toLowerCase()))
+  console.log(minPrice, maxPrice)
+
+  const filteredProjects = projects.filter((project) => {
+    return (
+      (project.goal_amount >= filteredPriceRange[0] &&
+      project.goal_amount <= filteredPriceRange[1] &&
+      project.name_project.toLowerCase().includes(filteredSearchText.toLowerCase()) &&
+      project.minimum_donation >= filterMinDonationRequired
+      )
+      ||
+      (0 == filteredPriceRange[0] &&
+      0 == filteredPriceRange[1] &&
+      project.description.toLowerCase().includes(filteredSearchText.toLowerCase()))
+    );
+  });
 
   return (
+    <div>
+      <NavBar />
       <ViewContainer>
-        <BigText>Hola User 👋🏻</BigText>
+        {user && <BigText>Hola {user.name} 👋🏻</BigText>}
+        {!user && <BigText>Bienvenido a FundingMe</BigText>}
         <BoldText>¡Explora estos proyectos y aporta para llevarlos a cabo! 🌱</BoldText>
-
+        {loading &&
+        <LoadingContainer>
+          <Spin size="large">
+            <div className="content" />
+          </Spin>
+        </LoadingContainer>
+        }
+        {!loading &&
         <DashboardContainer>
           <ProjectsContainer>
             {filteredProjects
               .map((project, index) => (
                 <ProjectCard
-                  name={project.name}
+                  name={project.name_project}
                   description={project.description}
-                  goalAmount={project.goalAmount}
-                  collectedAmount={project.collectedAmount}
-                  image={project.image}
+                  goalAmount={project.goal_amount}
+                  collectedAmount={project.current_amount}
+                  image={project.image ? project.image : "https://source.unsplash.com/800x600/?" + project.name_project}
                   index={index}
                   key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                 />
@@ -106,10 +113,15 @@ const Login = () => {
                 placeholder="Nombre del proyecto"
                 onChange={(e) => setSearchText(e.target.value)}
               />
+              <BoldText2>Filtrar por donación mínima 💰</BoldText2>
+              <StyledInput
+                placeholder="Donación mínima requerida"
+                onChange={(e) => setMinDonationRequired(parseInt(e.target.value.replace(/\D/g, '')))}
+              />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
               <Slider
                 range
-                min={minPrice}
+                min={0}
                 max={maxPrice}
                 defaultValue={[minPrice, maxPrice]}
                 onChange={(value) => setPriceRange(value)}
@@ -120,7 +132,9 @@ const Login = () => {
               <StyledButton type="primary" onClick={handleFilterButton}>Filtrar</StyledButton>
             </FiltersContainer>
         </DashboardContainer>
+        }
       </ViewContainer>
+    </div>
   )
 }
 
@@ -157,6 +171,14 @@ export const ProjectsContainer = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 20px;
+`;
+
+export const LoadingContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 300px;
 `;
 
 export const FiltersContainer = styled(motion.div)`
