@@ -17,8 +17,8 @@ const fixNumber = (number: number) => {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount, collectedAmount, image, index }) => {
-  const percentage = Math.round((collectedAmount / goalAmount) * 100);
-  console.log(index)
+  const percentage = collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100;
+
   return (
     <motion.div
         whileHover={{ scale: 1.02 }}
@@ -33,14 +33,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount
         <Content>
             <h2>{name}</h2>
             <p className='project-description'>{description}</p>
-            <text>
-                Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️
-            </text>
-            <ProgressBar>
-            <Progress percentage={percentage}>
-                <ProgressLabel>{percentage}%</ProgressLabel>
-            </Progress>
-            </ProgressBar>
+            {collectedAmount < goalAmount ?
+              <text>
+                  Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️
+              </text>
+            :
+              <text>
+                  Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉
+              </text>
+            }
+            {percentage > 0 &&
+              <ProgressBar>
+                <Progress percentage={percentage}>
+                    <ProgressLabel>{percentage}%</ProgressLabel>
+                </Progress>
+              </ProgressBar>
+            }
         </Content>
         </Wrapper>
     </motion.div>

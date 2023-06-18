@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layout from '../components/Layout'
 import NotFound from '../components/NotFound'
 import FormProject from '../views/NewProject'
 import Login from '../views/Login'
@@ -10,18 +9,8 @@ const Router = () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Layout />,
+      element: <Dashboard/>,
       errorElement: <NotFound />,
-      children: [
-        {
-          path: '/',
-          element: <Dashboard />,
-        },
-        {
-          path: 'new',
-          element: <FormProject />,
-        },
-      ],
     },
     {
       path: '/login',
@@ -34,10 +23,10 @@ const Router = () => {
       errorElement: <NotFound />,
     },
     {
-      path: '/projects',
-      element: <Dashboard />,
+      path: '/new',
+      element: <FormProject />,
       errorElement: <NotFound />,
-    }
+    },
   ])
   return <RouterProvider router={router} />
 }

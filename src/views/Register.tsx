@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import PictureForm from '../components/PictureForm'
 import { colors } from '../styles/constants'
 import { Form } from 'antd'
+import { useState } from 'react'
 import {
   Footer,
   StyledLink,
@@ -13,18 +14,65 @@ import {
 } from './Login'
 
 const Register = () => {
-  const form = Form.useFormInstance()
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+
+  const validatePasswords = (fieldName: string, value: string): Promise<void> => {
+    const passwordUser = form.getFieldValue(fieldName)
+    if (value && value !== passwordUser) {
+      return Promise.reject(new Error('Las contraseñas no coinciden'));
+    } else {
+      return Promise.resolve();
+    }
+  };
+  
+
+  const onFinish = async (values: {
+    name: string
+    rut: string
+    email: string
+    password: string
+    confirmPassword: string
+  }) => {
+    console.log('Success:', values)
+    setLoading(true)
+    try {
+      const data = await fetch('https://softdeleteiic3143.onrender.com/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+      console.log(data)
+      if (data.status != 201) {
+        throw new Error('Error')
+      }
+      // we will save the json as user
+      const user = await data.json()
+      // save to local storage
+      localStorage.setItem('user', JSON.stringify(user))
+      // Redirect to login page
+      window.location.href = '/'
+    } catch (error) {
+      setLoading(false)
+      console.log(loading)
+      console.log('Error:', error)
+    }
+  }
+
   return (
     <PictureForm>
       <FormContainer>
         <BigText>Registrate</BigText>
         <Form
-          form={form}
-          layout="vertical"
-          requiredMark={false}
-        >
+            form={form}
+            layout="vertical"
+            requiredMark={false}
+            onFinish={onFinish}
+          >
           <Item
-            name="nombre"
+            name="name"
             label="Nombre"
             rules={[
               {
@@ -85,12 +133,17 @@ const Register = () => {
             />
           </Item>
           <Item
-            name="password"
+            name="confirmPassword"
             label="Confirmar contraseña"
+            dependencies={['password']}
             rules={[
               {
                 required: true,
-                message: 'La contraseña es requerida',
+                message: 'Por favor confirma tu contraseña',
+              },
+              {
+                validator: (_, value) => validatePasswords('password', value),
+                message: 'Las contraseñas no coinciden',
               },
             ]}
           >
@@ -99,7 +152,9 @@ const Register = () => {
               type="password"
             />
           </Item>
-          <StyledButton type="primary">Crear</StyledButton>
+          <StyledButton type="primary" htmlType="submit">
+            Crear
+          </StyledButton>
         </Form>
         <Footer>
           <div>¿Ya tienes una cuenta? </div>

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../styles/constants'
+import { colors, apiUrl } from '../styles/constants'
 import LogoGreen from '../assets/logo_green.png'
 import PictureForm from '../components/PictureForm'
 import { Form, Button, Input } from 'antd'
@@ -7,6 +7,33 @@ import { Link } from 'react-router-dom'
 
 const Login = () => {
   const form = Form.useFormInstance()
+
+  const onFinish = async (values: {
+    email: string
+    password: string
+  }) => {
+    try {
+      const data = await fetch(apiUrl + '/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+      // Check if status is 200
+      if (data.status !== 201) {
+        throw new Error('Error')
+      }
+      // we will save the json as user
+      const user = await data.json()
+      // save to local storage
+      localStorage.setItem('user', JSON.stringify(user))
+      // Redirect to home
+      window.location.href = '/'
+    } catch (error) {
+      console.log('Error:', error)
+    }
+  }
   return (
     <PictureForm>
       <Logo>
@@ -22,6 +49,7 @@ const Login = () => {
           form={form}
           layout="vertical"
           requiredMark={false}
+          onFinish={onFinish}
         >
           <Item
             name="email"
@@ -51,7 +79,7 @@ const Login = () => {
               type="password"
             />
           </Item>
-          <StyledButton type="primary">Entrar</StyledButton>
+          <StyledButton type="primary" htmlType='submit'>Entrar</StyledButton>
         </Form>
         <Footer>
           <div>¿No tienes una cuenta? </div>

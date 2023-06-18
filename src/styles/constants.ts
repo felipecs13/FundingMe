@@ -4,3 +4,5 @@ export const colors = {
   secondary: '#7ab317',
   fontColor: '#303236',
 }
+
+export const apiUrl = 'https://softdeleteiic3143.onrender.com'

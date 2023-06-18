@@ -1,4 +1,5 @@
 import { Button, Form, Input, InputNumber, Select } from 'antd'
+import NavBar from '../components/Layout'
 
 const FormProject = () => {
   const [form] = Form.useForm()
@@ -15,6 +16,7 @@ const FormProject = () => {
   }
   return (
     <div>
+      <NavBar />
       <div className="Form">
         <Form
           form={form}
