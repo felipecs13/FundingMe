@@ -20,11 +20,11 @@ const Login = () => {
   const fetchProjects = async () => {
     try {
       const response = await fetch(apiUrl + '/projects/')
-      const data = await response.json()
-      setProjects(data)
-      if (data.status != 201) {
+      if (response.status !== 200) {
         throw new Error('Error')
       }
+      const data = await response.json()
+      setProjects(data)
     } catch (error) {
       message.error('Error: problemas al cargar, intente más tarde.')
     } finally {

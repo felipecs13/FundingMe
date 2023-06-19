@@ -35,10 +35,10 @@ const Profile = () => {
           Authorization: token,
         },
       })
-      const data = await response.json()
-      if (data.status != 201) {
+      if (response.status !== 200) {
         throw new Error('Error')
       }
+      const data = await response.json()
       setDataUser({
         image: data.image_url,
         name: data.name,
