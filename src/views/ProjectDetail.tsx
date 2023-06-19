@@ -55,7 +55,7 @@ const ProjectDetail = () => {
           <>
             <Title>{project.name_project}</Title>
             <div>
-              <p>Project Description: {project.description}</p>
+              <p>{project.description}</p>
               <ImageWrapper>
                 <img
                   src={

@@ -184,7 +184,7 @@ const FormProject = () => {
                   >
                     <StyledSelectOption value="EDUCATION">Educación</StyledSelectOption>
                     <StyledSelectOption value="HEALTH">Salud</StyledSelectOption>
-                    <StyledSelectOption value="ENVIROMENT">Medio ambiente</StyledSelectOption>
+                    <StyledSelectOption value="ENVIRONMENT">Medio ambiente</StyledSelectOption>
                     <StyledSelectOption value="ANIMALS">Animales</StyledSelectOption>
                   </StyledSelect>
                 </Form.Item>
