@@ -1,4 +1,4 @@
-import { Button, Carousel, Form, Input, InputNumber, Select, Upload } from 'antd'
+import { Button, Carousel, DatePicker, Form, Input, InputNumber, Select, Upload } from 'antd'
 import { UploadOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, SafetyCertificateOutlined, PushpinOutlined, GiftOutlined } from '@ant-design/icons'
 import NavBar from '../components/Layout'
 import { useState, useEffect } from 'react'
@@ -33,6 +33,9 @@ const FormProject = () => {
     "type_project" : string,
     "goal_amount": number,
     "image": any | null
+    "location": string
+    "end_date": string
+    "category": string
   }) => {
     console.log('Success:', values)
     setLoading(true)
@@ -47,6 +50,10 @@ const FormProject = () => {
       formData.append('project[minimum_donation]', values.minimum_donation.toString());
       formData.append('project[type_project]', values.type_project);
       formData.append('project[goal_amount]', values.goal_amount.toString());
+      formData.append('project[location]', values.location);
+      formData.append('project[end_date]', values.end_date);
+      formData.append('project[category]', values.category);
+
 
       const data = await fetch(apiUrl + '/projects', {
         method: 'POST',
@@ -60,7 +67,7 @@ const FormProject = () => {
       if (data.status != 201) {
         throw new Error('Error')
       }
-      // Redirect to login page
+      // Redirect to home
       window.location.href = '/'
     } catch (error) {
       setLoading(false)
@@ -69,6 +76,11 @@ const FormProject = () => {
     }
   }
 
+  
+
+  // const onFinishFailed = (errorInfo: string) => {
+  //   console.log('Failed:', errorInfo);
+  // };
   const onReset = () => {
     form.resetFields()
   }
@@ -86,7 +98,7 @@ const FormProject = () => {
               ¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!
             </SubText>
           </motion.div>
-          
+
           <div className="Form">
             <Form
               form={form}
@@ -156,8 +168,8 @@ const FormProject = () => {
                   placeholder="Selecciona tipo de proyecto"
                   allowClear
                 >
-                  <StyledSelectOption value="ONG">ONG</StyledSelectOption>
-                  <StyledSelectOption value="PERSONAL">PERSONAL</StyledSelectOption>
+                  <StyledSelectOption value="ONG">Ong</StyledSelectOption>
+                  <StyledSelectOption value="PERSONAL">Personal</StyledSelectOption>
                 </StyledSelect>
               </Form.Item>
               </motion.div>
@@ -187,6 +199,15 @@ const FormProject = () => {
                     placeholder="Locación del proyecto"
                     prefix={<PushpinOutlined />}
                   />
+                </Form.Item>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
+                <Form.Item
+                  name="end_date"
+                  rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
+                >
+                  <DatePicker placeholder="Fecha de término" />
                 </Form.Item>
               </motion.div>
 
