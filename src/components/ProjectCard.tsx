@@ -10,13 +10,14 @@ interface ProjectCardProps {
   collectedAmount: number;
   image: string;
   index: number;
+  id: number;
 }
 
 const fixNumber = (number: number) => {
     return number.toLocaleString('es-AR');
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount, collectedAmount, image, index }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount, collectedAmount, image, index, id }) => {
   const percentage = collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100;
 
   return (
@@ -25,6 +26,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount
         whileTap={{ scale: 0.99 }}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0, transition : { duration: 0.5, delay: index * 0.1 } }}
+        onClick={() => window.location.href = '/project/' + id}
     >
         <Wrapper>
         <ImageWrapper>

@@ -4,6 +4,7 @@ import FormProject from '../views/NewProject'
 import Login from '../views/Login'
 import Register from '../views/Register'
 import Dashboard from '../views/Dashboard'
+import ProjectDetail from '../views/ProjectDetail'
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -27,6 +28,11 @@ const Router = () => {
       element: <FormProject />,
       errorElement: <NotFound />,
     },
+    {
+      path: '/project/:id',
+      element: <ProjectDetail />,
+      errorElement: <NotFound />,
+    }
   ])
   return <RouterProvider router={router} />
 }

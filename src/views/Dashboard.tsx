@@ -19,7 +19,7 @@ const Login = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(apiUrl + '/projects')
+      const response = await fetch(apiUrl + '/projects/')
       const data = await response.json()
       setProjects(data)
     } catch (error) {
@@ -91,6 +91,7 @@ const Login = () => {
             {filteredProjects
               .map((project, index) => (
                 <ProjectCard
+                  id={project.id}
                   name={project.name_project}
                   description={project.description}
                   goalAmount={project.goal_amount}
