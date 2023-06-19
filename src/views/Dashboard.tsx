@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
 import NavBar from '../components/Layout'
+import { message } from 'antd'
 
 const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
@@ -21,8 +22,11 @@ const Login = () => {
       const response = await fetch(apiUrl + '/projects/')
       const data = await response.json()
       setProjects(data)
+      if (data.status != 201) {
+        throw new Error('Error')
+      }
     } catch (error) {
-      console.log(error)
+      message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
       setLoading(false)
     }

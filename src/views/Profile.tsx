@@ -7,6 +7,7 @@ import { Spin } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
 import NoImg from '../assets/no_image.jpg'
+import { message } from 'antd'
 
 interface IUser {
   image: string
@@ -35,6 +36,9 @@ const Profile = () => {
         },
       })
       const data = await response.json()
+      if (data.status != 201) {
+        throw new Error('Error')
+      }
       setDataUser({
         image: data.image_url,
         name: data.name,
@@ -43,7 +47,8 @@ const Profile = () => {
         bankAccount: data.bank_account,
       })
     } catch (error) {
-      console.log(error)
+      message.error('Error: problemas al cargar, intente más tarde.')
+      window.location.href = '/'
     } finally {
       setLoading(false)
     }

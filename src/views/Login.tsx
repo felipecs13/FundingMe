@@ -6,6 +6,7 @@ import { Form, Button, Input, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { LoadingContainer } from './Dashboard'
+import { message } from 'antd'
 
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -23,7 +24,7 @@ const Login = () => {
       })
       // Check if status is 200
       if (data.status !== 201) {
-        throw new Error('Error')
+        throw Error()
       }
       // we will save the json as user
       const user = await data.json()
@@ -32,7 +33,7 @@ const Login = () => {
       // Redirect to home
       window.location.href = '/'
     } catch (error) {
-      console.log('Error:', error)
+      message.error('Error: revise los campos ingresados.')
     } finally {
       setLoading(false)
     }

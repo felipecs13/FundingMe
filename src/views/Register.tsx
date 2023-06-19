@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import PictureForm from '../components/PictureForm'
 import { colors } from '../styles/constants'
-import { Form } from 'antd'
+import { Form, message } from 'antd'
 import { useState } from 'react'
 import {
   Footer,
@@ -54,8 +54,9 @@ const Register = () => {
       // Redirect to login page
       window.location.href = '/'
     } catch (error) {
+      message.error('Error: revise los campos ingresados.')
+    } finally {
       setLoading(false)
-      console.log('Error:', error)
     }
   }
 
