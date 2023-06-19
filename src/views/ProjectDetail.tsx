@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { apiUrl } from '../styles/constants';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ const ProjectDetail = () => {
         console.log(error)
       } finally {
         setLoading(false)
+        console.log(loading)
       }
     }
     useEffect(() => {

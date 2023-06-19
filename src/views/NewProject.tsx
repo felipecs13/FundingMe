@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import styled from 'styled-components';
 import { colors, apiUrl } from '../styles/constants'
-import PictureForm from '../components/PictureForm'
 
 interface User{
   token: string
@@ -19,10 +18,6 @@ const FormProject = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
   const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '' });
-
-  const img1 = "https://www.grupocibernos.com/hs-fs/hubfs/gestion-de-proyectos-empresariales.jpg?width=1440&name=gestion-de-proyectos-empresariales.jpg"
-  const img2 = "https://www.grupocibernos.com/hs-fs/hubfs/gestion-de-proyectos-empresariales.jpg?width=1440&name=gestion-de-proyectos-empresariales.jpg"
-  const img3 = "https://www.grupocibernos.com/hs-fs/hubfs/gestion-de-proyectos-empresariales.jpg?width=1440&name=gestion-de-proyectos-empresariales.jpg"
   
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
