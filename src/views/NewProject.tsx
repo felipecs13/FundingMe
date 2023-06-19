@@ -1,4 +1,4 @@
-import { Alert, Button, Carousel, DatePicker, Form, Input, InputNumber, Select, Upload } from 'antd'
+import { Button, Carousel, DatePicker, Form, Input, InputNumber, Select, Upload } from 'antd'
 import { UploadOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, SafetyCertificateOutlined, PushpinOutlined, GiftOutlined } from '@ant-design/icons'
 import NavBar from '../components/Layout'
 import { useState, useEffect } from 'react'
