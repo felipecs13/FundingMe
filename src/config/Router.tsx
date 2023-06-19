@@ -5,12 +5,13 @@ import Login from '../views/Login'
 import Register from '../views/Register'
 import Dashboard from '../views/Dashboard'
 import ProjectDetail from '../views/ProjectDetail'
+import Profile from '../views/Profile'
 
 const Router = () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Dashboard/>,
+      element: <Dashboard />,
       errorElement: <NotFound />,
     },
     {
@@ -32,7 +33,12 @@ const Router = () => {
       path: '/project/:id',
       element: <ProjectDetail />,
       errorElement: <NotFound />,
-    }
+    },
+    {
+      path: '/me',
+      element: <Profile />,
+      errorElement: <NotFound />,
+    },
   ])
   return <RouterProvider router={router} />
 }

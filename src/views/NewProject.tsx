@@ -69,11 +69,6 @@ const FormProject = () => {
     }
   }
 
-  
-
-  // const onFinishFailed = (errorInfo: string) => {
-  //   console.log('Failed:', errorInfo);
-  // };
   const onReset = () => {
     form.resetFields()
   }
