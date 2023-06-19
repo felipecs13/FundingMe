@@ -12,6 +12,8 @@ import {
   BigText,
   Item as BaseItem,
 } from './Login'
+import { Spin } from 'antd'
+import { LoadingContainer } from './Dashboard'
 
 const Register = () => {
   const [form] = Form.useForm()
@@ -20,12 +22,11 @@ const Register = () => {
   const validatePasswords = (fieldName: string, value: string): Promise<void> => {
     const passwordUser = form.getFieldValue(fieldName)
     if (value && value !== passwordUser) {
-      return Promise.reject(new Error('Las contraseñas no coinciden'));
+      return Promise.reject(new Error('Las contraseñas no coinciden'))
     } else {
-      return Promise.resolve();
+      return Promise.resolve()
     }
-  };
-  
+  }
 
   const onFinish = async (values: {
     name: string
@@ -34,7 +35,6 @@ const Register = () => {
     password: string
     confirmPassword: string
   }) => {
-    console.log('Success:', values)
     setLoading(true)
     try {
       const data = await fetch('https://softdeleteiic3143.onrender.com/users', {
@@ -44,7 +44,6 @@ const Register = () => {
         },
         body: JSON.stringify(values),
       })
-      console.log(data)
       if (data.status != 201) {
         throw new Error('Error')
       }
@@ -56,111 +55,121 @@ const Register = () => {
       window.location.href = '/'
     } catch (error) {
       setLoading(false)
-      console.log(loading)
       console.log('Error:', error)
     }
   }
 
   return (
     <PictureForm>
-      <FormContainer>
-        <BigText>Registrate</BigText>
-        <Form
+      {loading ? (
+        <LoadingContainer>
+          <Spin size="large">
+            <div className="content" />
+          </Spin>
+        </LoadingContainer>
+      ) : (
+        <FormContainer>
+          <BigText>Registrate</BigText>
+          <Form
             form={form}
             layout="vertical"
             requiredMark={false}
             onFinish={onFinish}
           >
-          <Item
-            name="name"
-            label="Nombre"
-            rules={[
-              {
-                required: true,
-                message: 'Tu nombre es requerido',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Ingresa tus nombre"
-              type="text"
-            />
-          </Item>
-          {/* TODO: Add RUT validation and format */}
-          <Item
-            name="rut"
-            label="RUT"
-            rules={[
-              {
-                required: true,
-                message: 'Tu rut es requerido',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Ingresa tu rut"
-              type="text"
-            />
-          </Item>
-          <Item
-            label="Correo electrónico"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'El correo electrónico es requerido',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Correo electrónico"
-              type="email"
-            />
-          </Item>
-          <Item
-            name="password"
-            label="Contraseña"
-            rules={[
-              {
-                required: true,
-                message: 'La contraseña es requerida',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Contraseña"
-              type="password"
-            />
-          </Item>
-          <Item
-            name="confirmPassword"
-            label="Confirmar contraseña"
-            dependencies={['password']}
-            rules={[
-              {
-                required: true,
-                message: 'Por favor confirma tu contraseña',
-              },
-              {
-                validator: (_, value) => validatePasswords('password', value),
-                message: 'Las contraseñas no coinciden',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Ingresa nuevamente tu contraseña"
-              type="password"
-            />
-          </Item>
-          <StyledButton type="primary" htmlType="submit">
-            Crear
-          </StyledButton>
-        </Form>
-        <Footer>
-          <div>¿Ya tienes una cuenta? </div>
-          <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
-        </Footer>
-      </FormContainer>
+            <Item
+              name="name"
+              label="Nombre"
+              rules={[
+                {
+                  required: true,
+                  message: 'Tu nombre es requerido',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Ingresa tus nombre"
+                type="text"
+              />
+            </Item>
+            {/* TODO: Add RUT validation and format */}
+            <Item
+              name="rut"
+              label="RUT"
+              rules={[
+                {
+                  required: true,
+                  message: 'Tu rut es requerido',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Ingresa tu rut"
+                type="text"
+              />
+            </Item>
+            <Item
+              label="Correo electrónico"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: 'El correo electrónico es requerido',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Correo electrónico"
+                type="email"
+              />
+            </Item>
+            <Item
+              name="password"
+              label="Contraseña"
+              rules={[
+                {
+                  required: true,
+                  message: 'La contraseña es requerida',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Contraseña"
+                type="password"
+              />
+            </Item>
+            <Item
+              name="confirmPassword"
+              label="Confirmar contraseña"
+              dependencies={['password']}
+              rules={[
+                {
+                  required: true,
+                  message: 'Por favor confirma tu contraseña',
+                },
+                {
+                  validator: (_, value) => validatePasswords('password', value),
+                  message: 'Las contraseñas no coinciden',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Ingresa nuevamente tu contraseña"
+                type="password"
+              />
+            </Item>
+            <StyledButton
+              type="primary"
+              htmlType="submit"
+            >
+              Crear
+            </StyledButton>
+          </Form>
+          <Footer>
+            <div>¿Ya tienes una cuenta? </div>
+            <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
+          </Footer>
+        </FormContainer>
+      )}
     </PictureForm>
   )
 }

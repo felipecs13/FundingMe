@@ -2,17 +2,18 @@ import styled from 'styled-components'
 import { colors, apiUrl } from '../styles/constants'
 import LogoGreen from '../assets/logo_green.png'
 import PictureForm from '../components/PictureForm'
-import { Form, Button, Input } from 'antd'
+import { Form, Button, Input, Spin } from 'antd'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { LoadingContainer } from './Dashboard'
 
 const Login = () => {
+  const [loading, setLoading] = useState<boolean>(false)
   const form = Form.useFormInstance()
 
-  const onFinish = async (values: {
-    email: string
-    password: string
-  }) => {
+  const onFinish = async (values: { email: string; password: string }) => {
     try {
+      setLoading(true)
       const data = await fetch(apiUrl + '/login', {
         method: 'POST',
         headers: {
@@ -32,6 +33,8 @@ const Login = () => {
       window.location.href = '/'
     } catch (error) {
       console.log('Error:', error)
+    } finally {
+      setLoading(false)
     }
   }
   return (
@@ -43,49 +46,65 @@ const Login = () => {
         />
         <BoldText>FundingMe</BoldText>
       </Logo>
-      <FormContainer>
-        <BigText>Inicia sesión</BigText>
-        <Form
-          form={form}
-          layout="vertical"
-          requiredMark={false}
-          onFinish={onFinish}
-        >
-          <Item
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'El correo electrónico es requerido',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Correo electrónico"
-              type="email"
-            />
-          </Item>
-          <Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'La contraseña es requerida',
-              },
-            ]}
-          >
-            <StyledInput
-              placeholder="Contraseña"
-              type="password"
-            />
-          </Item>
-          <StyledButton type="primary" htmlType='submit'>Entrar</StyledButton>
-        </Form>
-        <Footer>
-          <div>¿No tienes una cuenta? </div>
-          <StyledLink to={'/register'}>Crea una aquí</StyledLink>
-        </Footer>
-      </FormContainer>
+      {loading ? (
+        <LoadingContainer>
+          <Spin size="large">
+            <div className="content" />
+          </Spin>
+        </LoadingContainer>
+      ) : (
+        <>
+          <FormContainer>
+            <BigText>Inicia sesión</BigText>
+
+            <Form
+              form={form}
+              layout="vertical"
+              requiredMark={false}
+              onFinish={onFinish}
+            >
+              <Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'El correo electrónico es requerido',
+                  },
+                ]}
+              >
+                <StyledInput
+                  placeholder="Correo electrónico"
+                  type="email"
+                />
+              </Item>
+              <Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'La contraseña es requerida',
+                  },
+                ]}
+              >
+                <StyledInput
+                  placeholder="Contraseña"
+                  type="password"
+                />
+              </Item>
+              <StyledButton
+                type="primary"
+                htmlType="submit"
+              >
+                Entrar
+              </StyledButton>
+            </Form>
+            <Footer>
+              <div>¿No tienes una cuenta? </div>
+              <StyledLink to={'/register'}>Crea una aquí</StyledLink>
+            </Footer>
+          </FormContainer>
+        </>
+      )}
     </PictureForm>
   )
 }

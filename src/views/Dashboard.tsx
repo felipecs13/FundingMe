@@ -7,12 +7,11 @@ import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
 import NavBar from '../components/Layout'
 
-const fixNumber = (number : number) => {
-  return "$" + Number(number).toLocaleString('es-AR');
-};
+const fixNumber = (number: number) => {
+  return '$' + Number(number).toLocaleString('es-AR')
+}
 
 const Login = () => {
-
   const [loading, setLoading] = useState<boolean>(true)
   const [projects, setProjects] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
@@ -31,45 +30,41 @@ const Login = () => {
 
   useEffect(() => {
     fetchProjects()
-
     const user = localStorage.getItem('user')
     if (user) {
       setUser(JSON.parse(user))
-      console.log(user)
     }
   }, [])
 
-  const minPrice = projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0;
-  const maxPrice = projects.length > 0 ? Math.max(...projects.map((project) => project.goal_amount)) : 1000;
-  
-  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-  const [filteredPriceRange, setFilteredPriceRange] = useState([0, 0]);
-  const [searchText, setSearchText] = useState("");
-  const [minDonationRequired, setMinDonationRequired] = useState(0);
-  const [filterMinDonationRequired, setFilterMinDonationRequired] = useState(0);
-  const [filteredSearchText, setFilteredSearchText] = useState("");
+  const minPrice =
+    projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
+  const maxPrice =
+    projects.length > 0 ? Math.max(...projects.map((project) => project.goal_amount)) : 1000
+
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice])
+  const [filteredPriceRange, setFilteredPriceRange] = useState([0, 0])
+  const [searchText, setSearchText] = useState('')
+  const [minDonationRequired, setMinDonationRequired] = useState(0)
+  const [filterMinDonationRequired, setFilterMinDonationRequired] = useState(0)
+  const [filteredSearchText, setFilteredSearchText] = useState('')
 
   const handleFilterButton = () => {
-    setFilteredPriceRange(priceRange);
-    setFilteredSearchText(searchText);
-    setFilterMinDonationRequired(minDonationRequired);
-  };
-
-  console.log(minPrice, maxPrice)
+    setFilteredPriceRange(priceRange)
+    setFilteredSearchText(searchText)
+    setFilterMinDonationRequired(minDonationRequired)
+  }
 
   const filteredProjects = projects.filter((project) => {
     return (
       (project.goal_amount >= filteredPriceRange[0] &&
-      project.goal_amount <= filteredPriceRange[1] &&
-      project.name_project.toLowerCase().includes(filteredSearchText.toLowerCase()) &&
-      project.minimum_donation >= filterMinDonationRequired
-      )
-      ||
+        project.goal_amount <= filteredPriceRange[1] &&
+        project.name_project.toLowerCase().includes(filteredSearchText.toLowerCase()) &&
+        project.minimum_donation >= filterMinDonationRequired) ||
       (0 == filteredPriceRange[0] &&
-      0 == filteredPriceRange[1] &&
-      project.description.toLowerCase().includes(filteredSearchText.toLowerCase()))
-    );
-  });
+        0 == filteredPriceRange[1] &&
+        project.description.toLowerCase().includes(filteredSearchText.toLowerCase()))
+    )
+  })
 
   return (
     <div>
@@ -78,35 +73,40 @@ const Login = () => {
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
         {!user && <BigText>Bienvenido a FundingMe</BigText>}
         <BoldText>¡Explora estos proyectos y aporta para llevarlos a cabo! 🌱</BoldText>
-        {loading &&
-        <LoadingContainer>
-          <Spin size="large">
-            <div className="content" />
-          </Spin>
-        </LoadingContainer>
-        }
-        {!loading &&
-        <DashboardContainer>
-          <ProjectsContainer>
-            {filteredProjects
-              .map((project, index) => (
+        {loading && (
+          <LoadingContainer>
+            <Spin size="large">
+              <div className="content" />
+            </Spin>
+          </LoadingContainer>
+        )}
+        {!loading && (
+          <DashboardContainer>
+            <ProjectsContainer>
+              {filteredProjects.map((project, index) => (
                 <ProjectCard
                   id={project.id}
                   name={project.name_project}
                   description={project.description}
                   goalAmount={project.goal_amount}
                   collectedAmount={project.current_amount}
-                  image={project.image ? project.image : "https://source.unsplash.com/800x600/?" + project.name_project}
+                  image={
+                    project.image
+                      ? project.image
+                      : 'https://source.unsplash.com/800x600/?' + project.name_project
+                  }
                   index={index}
                   key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                 />
               ))}
-            {filteredProjects.length === 0 && <BoldText2>No se encontraron proyectos con los filtros realizados 😢</BoldText2>}
-          </ProjectsContainer>
+              {filteredProjects.length === 0 && (
+                <BoldText2>No se encontraron proyectos con los filtros realizados 😢</BoldText2>
+              )}
+            </ProjectsContainer>
             <FiltersContainer
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay : 0.6 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               <FilterTitle>Filtra los proyectos 🔍</FilterTitle>
               <BoldText2>Encuentra tu proyecto favorito 👀</BoldText2>
@@ -117,7 +117,9 @@ const Login = () => {
               <BoldText2>Filtrar por donación mínima 💰</BoldText2>
               <StyledInput
                 placeholder="Donación mínima requerida"
-                onChange={(e) => setMinDonationRequired(parseInt(e.target.value.replace(/\D/g, '')))}
+                onChange={(e) =>
+                  setMinDonationRequired(parseInt(e.target.value.replace(/\D/g, '')))
+                }
               />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
               <Slider
@@ -130,10 +132,15 @@ const Login = () => {
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
               </text>
-              <StyledButton type="primary" onClick={handleFilterButton}>Filtrar</StyledButton>
+              <StyledButton
+                type="primary"
+                onClick={handleFilterButton}
+              >
+                Filtrar
+              </StyledButton>
             </FiltersContainer>
-        </DashboardContainer>
-        }
+          </DashboardContainer>
+        )}
       </ViewContainer>
     </div>
   )
@@ -172,7 +179,7 @@ export const ProjectsContainer = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 20px;
-`;
+`
 
 export const LoadingContainer = styled.div`
   width: 100%;
@@ -180,7 +187,7 @@ export const LoadingContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   height: 300px;
-`;
+`
 
 export const FiltersContainer = styled(motion.div)`
   padding-left: 2%;
@@ -197,7 +204,7 @@ export const FiltersContainer = styled(motion.div)`
   }
   background-color: #f5f5f5;
   border-radius: 15px;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 `
 
 export const DashboardContainer = styled.div`

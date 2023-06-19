@@ -5,16 +5,15 @@ import { colors } from '../styles/constants'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
-
 const Layout = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('user')
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser))
     }
-  }, []);
+  }, [])
 
   const goToHome = () => {
     window.location.href = '/'
@@ -24,16 +23,23 @@ const Layout = () => {
     // Ask the user if they are sure
     const confirm = window.confirm('¿Estás seguro de que quieres cerrar sesión?')
     if (confirm) {
-      localStorage.removeItem('user');
-      setUser(null);
+      localStorage.removeItem('user')
+      setUser(null)
       window.location.href = '/'
     }
   }
 
   return (
     <Wrapper>
-      <Logo onClick={goToHome} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        <Img src={LogoImg} alt="Logo" />
+      <Logo
+        onClick={goToHome}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Img
+          src={LogoImg}
+          alt="Logo"
+        />
         <BoldText>FundingMe</BoldText>
       </Logo>
       <ContainerLinks>
@@ -46,8 +52,8 @@ const Layout = () => {
         {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
       </ContainerLinks>
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,8 +104,8 @@ const StyledLink = styled(Link)`
 
 const StyledText = styled.div`
   font-size: 16px;
-  font-weight: 500; 
-  color: ${colors.background};  
+  font-weight: 500;
+  color: ${colors.background};
   text-decoration: inherit;
   cursor: pointer;
 
