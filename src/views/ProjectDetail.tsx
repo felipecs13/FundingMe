@@ -1,54 +1,79 @@
-import { useState, useEffect } from 'react';
-import { apiUrl } from '../styles/constants';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import Navbar from '../components/Layout';
+import { useState, useEffect } from 'react'
+import { apiUrl } from '../styles/constants'
+import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
+import Navbar from '../components/Layout'
+import { Card, Title } from './Profile'
+import { message, Spin } from 'antd'
+import { LoadingContainer } from './Dashboard'
+
+interface Project {
+  name_project: string
+  description: string
+  image: string
+  goal_amount: number
+  current_amount: number
+}
 
 const ProjectDetail = () => {
   const [project, setProject] = useState<Project>({} as Project)
   const [loading, setLoading] = useState<boolean>(true)
-  const { id } = useParams<Record<string, string>>();
-  
+  const { id } = useParams<Record<string, string>>()
 
   const fetchProject = async () => {
-      try {
-        const response = await fetch(apiUrl + '/projects/'+ id)
-        const data = await response.json()
-        setProject(data)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
-        console.log(loading)
+    try {
+      const response = await fetch(`${apiUrl}/projects/${id}`)
+      if (response.status !== 200) {
+        throw new Error('Error')
       }
+      const data = await response.json()
+      setProject(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+      window.location.href = '/'
+    } finally {
+      setLoading(false)
     }
-    useEffect(() => {
-      setLoading(true)
-      fetchProject()
-    }, [])
+  }
 
-    interface Project {
-      name_project: string;
-      description: string;
-      image: string;
-      goal_amount: number;
-      current_amount: number;
-    }
+  useEffect(() => {
+    setLoading(true)
+    fetchProject()
+  }, [])
 
   return (
-      <div>
-        <Navbar />
-          <h1>Project Detail</h1>
-          <div style={{ width: 1100 }}>
-              <p>Project Name: {project.name_project}</p>
+    <>
+      <Navbar />
+      <Card>
+        {loading ? (
+          <LoadingContainer>
+            <Spin size="large">
+              <div className="content" />
+            </Spin>
+          </LoadingContainer>
+        ) : (
+          <>
+            <Title>{project.name_project}</Title>
+            <div>
               <p>Project Description: {project.description}</p>
               <ImageWrapper>
-                <img src={project.image ? project.image : "https://source.unsplash.com/800x600/?" + project.name_project} alt={project.name_project} />
+                <img
+                  src={
+                    project.image
+                      ? project.image
+                      : 'https://source.unsplash.com/800x600/?' + project.name_project
+                  }
+                  alt={project.name_project}
+                />
               </ImageWrapper>
-              <p>Project Goal: {project.goal_amount}</p>
-              <p>Project Collected: {project.current_amount}</p>
-          </div>
-      </div>
+              <p>Meta del proyecto: {project.goal_amount}</p>
+              <p>Actual monto recolectado: {project.current_amount}</p>
+              
+            </div>
+          </>
+        )}
+      </Card>
+    </>
   )
 }
 
@@ -61,6 +86,6 @@ const ImageWrapper = styled.div`
     height: 50%;
     object-fit: cover;
   }
-`;
+`
 
-export default ProjectDetail;
+export default ProjectDetail

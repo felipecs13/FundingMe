@@ -102,7 +102,7 @@ const Profile = () => {
   )
 }
 
-const Card = styled.div`
+export const Card = styled.div`
   margin: 3rem;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -122,7 +122,7 @@ const FieldInfo = styled.div`
   margin: 1rem 0;
 `
 
-const Title = styled(BigText)`
+export const Title = styled(BigText)`
   margin: 0 0 1rem 0;
 `
 
