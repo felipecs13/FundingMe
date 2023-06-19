@@ -82,10 +82,16 @@ const FormProject = () => {
       <NavBar />
       <ImgFormContainer>
         <FormContainer>
-          <BoldText>Crear Proyecto 🪴</BoldText>
-          <SubText>
-            ¡Crea tu proyecto y comienza a recibir donaciones!
-          </SubText>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.1 }}>
+            <BoldText>Crear tu propio proyecto 🪴</BoldText>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.2 }}>
+            <SubText>
+              ¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!
+            </SubText>
+          </motion.div>
+          
           <div className="Form">
             <Form
               form={form}
@@ -98,46 +104,55 @@ const FormProject = () => {
               // onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
-              <Form.Item
-                name="name_project"
-                rules={[{ required: true, message: 'Ingresa el nombre de tu proyecto' }]}
-              >
-                <StyledInput
-                  placeholder="Nombre del proyecto"
-                  prefix={<IdcardOutlined />}
-                />
-              </Form.Item>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.4 }}>
+                <Form.Item
+                  name="name_project"
+                  rules={[{ required: true, message: 'Ingresa el nombre de tu proyecto' }]}
+                >
+                  <StyledInput
+                    placeholder="Nombre del proyecto"
+                    prefix={<IdcardOutlined />}
+                  />
+                </Form.Item>
+              </motion.div>
 
-              <Form.Item
-                name="bank_account"
-                rules={[{ required: true, message: 'Ingresa tu cuenta bancaria' }]}
-              >
-                <StyledInput
-                  placeholder="Cuenta bancaria"
-                  prefix={<BankOutlined />}
-                />
-              </Form.Item>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.5 }}>
+                <Form.Item
+                  name="bank_account"
+                  rules={[{ required: true, message: 'Ingresa tu cuenta bancaria' }]}
+                >
+                  <StyledInput
+                    placeholder="Cuenta bancaria"
+                    prefix={<BankOutlined />}
+                  />
+                </Form.Item>
+              </motion.div>
 
-              <Form.Item
-                name="description"
-                rules={[{ required: true, message: 'Ingresa la descripción de tu proyecto' }]}
-              >
-                <StyledInput 
-                  placeholder="Descripción del proyecto"
-                  prefix={<FileTextOutlined />}
-                />
-              </Form.Item>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.6 }}>
+                <Form.Item
+                  name="description"
+                  rules={[{ required: true, message: 'Ingresa la descripción de tu proyecto' }]}
+                >
+                  <StyledInput 
+                    placeholder="Descripción del proyecto"
+                    prefix={<FileTextOutlined />}
+                  />
+                </Form.Item>
+              </motion.div>
 
-              <Form.Item
-                name="goal_amount"
-                rules={[{ required: true, message: 'Ingresa el monto meta' }]}
-              >
-                <StyledInputNumber
-                  placeholder="Monto meta del proyecto (CLP)"
-                  prefix={<SafetyCertificateOutlined />}
-                />
-              </Form.Item>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.7 }}>
+                <Form.Item
+                  name="goal_amount"
+                  rules={[{ required: true, message: 'Ingresa el monto meta' }]}
+                >
+                  <StyledInputNumber
+                    placeholder="Monto meta del proyecto (CLP)"
+                    prefix={<SafetyCertificateOutlined />}
+                  />
+                </Form.Item>
+              </motion.div>
 
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.8 }}>
               <Form.Item
                 name="type_project"
                 rules={[{ required: true, message: 'Ingresa el tipo de proyecto' }]}
@@ -150,63 +165,72 @@ const FormProject = () => {
                   <StyledSelectOption value="PERSONAL">PERSONAL</StyledSelectOption>
                 </StyledSelect>
               </Form.Item>
+              </motion.div>
 
-              <Form.Item
-                name="category"
-                rules={[{ required: true, message: 'Ingresa una categoría' }]}
-              >
-                <StyledSelect
-                  placeholder="Selecciona categoría"
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.9 }}>
+                <Form.Item
+                  name="category"
+                  rules={[{ required: true, message: 'Ingresa una categoría' }]}
                 >
-                  <StyledSelectOption value="EDUCATION">Educación</StyledSelectOption>
-                  <StyledSelectOption value="HEALTH">Salud</StyledSelectOption>
-                  <StyledSelectOption value="ENVIROMENT">Medio ambiente</StyledSelectOption>
-                  <StyledSelectOption value="ANIMALS">Animales</StyledSelectOption>
-                </StyledSelect>
-              </Form.Item>
+                  <StyledSelect
+                    placeholder="Selecciona categoría"
+                  >
+                    <StyledSelectOption value="EDUCATION">Educación</StyledSelectOption>
+                    <StyledSelectOption value="HEALTH">Salud</StyledSelectOption>
+                    <StyledSelectOption value="ENVIROMENT">Medio ambiente</StyledSelectOption>
+                    <StyledSelectOption value="ANIMALS">Animales</StyledSelectOption>
+                  </StyledSelect>
+                </Form.Item>
+              </motion.div>
 
-              <Form.Item
-                name="location"
-                rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
-              >
-                <StyledInput
-                  placeholder="Locación del proyecto"
-                  prefix={<PushpinOutlined />}
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="minimum_donation"
-                rules={[{ required: true, message: 'Ingresa un monto mínimo de donación' }]}
-              >
-                <StyledInputNumber
-                  placeholder="Monto mínimo de donación (CLP)"
-                  prefix={<GiftOutlined />}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Imágen"
-                name="image"
-              >
-                <Upload beforeUpload={(_) => {return false}} maxCount={1}>
-                  <Button icon={<UploadOutlined />}>Sube una imagen de tu proyecto 📷 </Button>
-                </Upload>
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
+                <Form.Item
+                  name="location"
+                  rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
                 >
-                  Enviar proyecto
-                </Button>
-                <Button
-                  htmlType="button"
-                  onClick={onReset}
+                  <StyledInput
+                    placeholder="Locación del proyecto"
+                    prefix={<PushpinOutlined />}
+                  />
+                </Form.Item>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1.1 }}>
+                <Form.Item
+                  name="minimum_donation"
+                  rules={[{ required: true, message: 'Ingresa un monto mínimo de donación' }]}
                 >
-                  Limpiar campos
-                </Button>
-              </Form.Item>
+                  <StyledInputNumber
+                    placeholder="Monto mínimo de donación (CLP)"
+                    prefix={<GiftOutlined />}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Imágen"
+                  name="image"
+                >
+                  <Upload beforeUpload={(_) => {return false}} maxCount={1}>
+                    <Button icon={<UploadOutlined />}>Sube una imagen de tu proyecto 📷 </Button>
+                  </Upload>
+                </Form.Item>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1.2 }}>
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Enviar proyecto
+                  </Button>
+                  <Button
+                    htmlType="button"
+                    onClick={onReset}
+                  >
+                    Limpiar campos
+                  </Button>
+                </Form.Item>
+              </motion.div>
             </Form>
           </div>
         </FormContainer>
