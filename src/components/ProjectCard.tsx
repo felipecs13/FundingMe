@@ -40,7 +40,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount
                   Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️
               </p>
             :
-              <p></p>
+              <p>
                   Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉
               </p>
             }
