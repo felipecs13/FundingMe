@@ -13,7 +13,7 @@ interface ProjectCardProps {
   id: number;
 }
 
-const fixNumber = (number: number) => {
+export const fixNumber = (number: number) => {
     return number.toLocaleString('es-AR');
 }
 

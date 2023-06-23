@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, SetStateAction } from 'react'
 import { colors, apiUrl } from '../styles/constants'
 import { Form, Button, Input, Slider, Spin } from 'antd'
 import { Link } from 'react-router-dom'
@@ -116,12 +116,13 @@ const Login = () => {
               <BoldText2>Encuentra tu proyecto favorito 👀</BoldText2>
               <StyledInput
                 placeholder="Nombre del proyecto"
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) => 
+                setSearchText(e.target.value)}
               />
               <BoldText2>Filtrar por donación mínima 💰</BoldText2>
               <StyledInput
                 placeholder="Donación mínima requerida"
-                onChange={(e) =>
+                onChange={(e: { target: { value: string } }) =>
                   setMinDonationRequired(parseInt(e.target.value.replace(/\D/g, '')))
                 }
               />
