@@ -13,7 +13,7 @@ interface ProjectCardProps {
   id: number;
 }
 
-const fixNumber = (number: number) => {
+export const fixNumber = (number: number) => {
     return number.toLocaleString('es-AR');
 }
 
@@ -36,13 +36,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount
             <h2>{name}</h2>
             <p className='project-description'>{description}</p>
             {collectedAmount < goalAmount ?
-              <text>
+              <p>
                   Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️
-              </text>
+              </p>
             :
-              <text>
+              <p>
                   Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉
-              </text>
+              </p>
             }
             {percentage > 0 &&
               <ProgressBar>
