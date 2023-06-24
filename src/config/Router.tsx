@@ -31,51 +31,19 @@ const Router = () => {
           element: <Profile />,
           errorElement: <NotFound />,
         },
-        {
-          path: 'login',
-          element: <Login />,
-          errorElement: <NotFound />,
-        },
-        {
-          path: 'register',
-          element: <Register />,
-          errorElement: <NotFound />,
-        },
       ],
     },
+    {
+      path: 'login',
+      element: <Login />,
+      errorElement: <NotFound />,
+    },
+    {
+      path: 'register',
+      element: <Register />,
+      errorElement: <NotFound />,
+    },
   ])
-  // const router = createBrowserRouter([
-  //   {
-  //     path: '/',
-  //     element: <Dashboard />,
-  //     errorElement: <NotFound />,
-  //   },
-  //   {
-  //     path: '/login',
-  //     element: <Login />,
-  //     errorElement: <NotFound />,
-  //   },
-  //   {
-  //     path: '/register',
-  //     element: <Register />,
-  //     errorElement: <NotFound />,
-  //   },
-  //   {
-  //     path: '/new',
-  //     element: <FormProject />,
-  //     errorElement: <NotFound />,
-  //   },
-  //   {
-  //     path: '/project/:id',
-  //     element: <ProjectDetail />,
-  //     errorElement: <NotFound />,
-  //   },
-  //   {
-  //     path: '/me',
-  //     element: <Profile />,
-  //     errorElement: <NotFound />,
-  //   },
-  // ])
   return <RouterProvider router={router} />
 }
 
