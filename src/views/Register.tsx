@@ -1,6 +1,4 @@
-import styled from 'styled-components'
 import PictureForm from '../components/PictureForm'
-import { colors } from '../styles/constants'
 import { Form, message } from 'antd'
 import { useState } from 'react'
 import {
@@ -8,12 +6,14 @@ import {
   StyledLink,
   StyledButton,
   StyledInput,
+  StyledPassword,
   FormContainer,
   BigText,
-  Item as BaseItem,
+  Item,
 } from './Login'
 import { Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
+import { rutFormatter } from '../helpers/rutFormatter'
 
 const Register = () => {
   const [form] = Form.useForm()
@@ -60,6 +60,11 @@ const Register = () => {
     }
   }
 
+  const handleRut = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rut = e.target.value
+    form.setFieldsValue({ rut: rutFormatter(rut) })
+  }
+
   return (
     <PictureForm>
       {loading ? (
@@ -83,28 +88,29 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Tu nombre es requerido',
+                  message: 'Debe ingresar su nombre',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Ingresa tus nombre"
+                placeholder="Nombre Apellido"
                 type="text"
               />
             </Item>
-            {/* TODO: Add RUT validation and format */}
             <Item
               name="rut"
               label="RUT"
               rules={[
                 {
                   required: true,
-                  message: 'Tu rut es requerido',
+                  message: 'Debe ingresar su RUT',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Ingresa tu rut"
+                maxLength={12}
+                onChange={handleRut}
+                placeholder="12.345.678-9"
                 type="text"
               />
             </Item>
@@ -114,12 +120,16 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'El correo electrónico es requerido',
+                  message: 'Debe ingresar un correo electrónico',
+                },
+                {
+                  type: 'email',
+                  message: 'El correo electrónico no es válido',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Correo electrónico"
+                placeholder="ejemplo@ejemplo.com"
                 type="email"
               />
             </Item>
@@ -129,11 +139,16 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'La contraseña es requerida',
+                  message: 'Debe ingresar una contraseña',
+                },
+                {
+                  min: 8,
+                  max: 14,
+                  message: 'La contraseña debe tener entre 8 y 14 caracteres',
                 },
               ]}
             >
-              <StyledInput
+              <StyledPassword
                 placeholder="Contraseña"
                 type="password"
               />
@@ -145,7 +160,7 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Por favor confirma tu contraseña',
+                  message: 'Debe confirmar su contraseña',
                 },
                 {
                   validator: (_, value) => validatePasswords('password', value),
@@ -153,8 +168,8 @@ const Register = () => {
                 },
               ]}
             >
-              <StyledInput
-                placeholder="Ingresa nuevamente tu contraseña"
+              <StyledPassword
+                placeholder="Repite contraseña"
                 type="password"
               />
             </Item>
@@ -174,16 +189,5 @@ const Register = () => {
     </PictureForm>
   )
 }
-
-const Item = styled(BaseItem)`
-  label {
-    font-weight: 500;
-    font-color: ${colors.fontColor};
-    margin: 0;
-  }
-  .ant-form-item-label {
-    padding: 2px;
-  }
-`
 
 export default Register

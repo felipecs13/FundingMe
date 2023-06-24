@@ -57,7 +57,6 @@ const Login = () => {
         <>
           <FormContainer>
             <BigText>Inicia sesión</BigText>
-
             <Form
               form={form}
               layout="vertical"
@@ -65,11 +64,16 @@ const Login = () => {
               onFinish={onFinish}
             >
               <Item
+                label="Correo electrónico"
                 name="email"
                 rules={[
                   {
                     required: true,
                     message: 'El correo electrónico es requerido',
+                  },
+                  {
+                    type: 'email',
+                    message: 'El correo electrónico no es válido',
                   },
                 ]}
               >
@@ -79,15 +83,21 @@ const Login = () => {
                 />
               </Item>
               <Item
+                label="Contraseña"
                 name="password"
                 rules={[
                   {
                     required: true,
                     message: 'La contraseña es requerida',
                   },
+                  {
+                    min: 8,
+                    max: 14,
+                    message: 'La contraseña debe tener entre 8 y 14 caracteres',
+                  },
                 ]}
               >
-                <StyledInput
+                <StyledPassword
                   placeholder="Contraseña"
                   type="password"
                 />
@@ -100,7 +110,7 @@ const Login = () => {
               </StyledButton>
             </Form>
             <Footer>
-              <div>¿No tienes una cuenta? </div>
+              <div>¿No tienes una cuenta?</div>
               <StyledLink to={'/register'}>Crea una aquí</StyledLink>
             </Footer>
           </FormContainer>
@@ -139,12 +149,20 @@ export const FormContainer = styled.div`
 export const BigText = styled.div`
   margin: 20px 0px;
   font-size: 36px;
-  font-weight: 500;
+  font-weight: 600;
   color: ${colors.fontColor};
 `
 
 export const StyledInput = styled(Input)`
-  border-radius: 2px;
+  border-radius: 3px;
+  border: 1px solid #b1b2b5;
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 5px 10px;
+`
+
+export const StyledPassword = styled(Input.Password)`
+  border-radius: 3px;
   border: 1px solid #b1b2b5;
   width: 100%;
   margin-bottom: 0px;
@@ -152,17 +170,15 @@ export const StyledInput = styled(Input)`
 `
 
 export const Item = styled(Form.Item)`
-  :hover {
-    border-color: #00c16c;
-  }
-  :focus {
-    border-color: #00c16c;
-    box-shadow: 0 0 0 2px rgba(0, 193, 108, 0.1);
-    border-inline-end-width: 1px;
-    outline: 0;
-  }
   .ant-form-item-explain-error {
     font-size: 12px;
+  }
+  label {
+    font-weight: 600;
+    margin: 0;
+  }
+  .ant-form-item-label {
+    padding: 2px;
   }
 `
 
