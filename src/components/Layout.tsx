@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import LogoImg from '../assets/logo_white.png'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { colors } from '../styles/constants'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
@@ -30,6 +30,7 @@ const Layout = () => {
   }
 
   return (
+    <>
     <Wrapper>
       <Logo
         onClick={goToHome}
@@ -52,6 +53,9 @@ const Layout = () => {
         {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
       </ContainerLinks>
     </Wrapper>
+    <Outlet />
+    </>
+    
   )
 }
 

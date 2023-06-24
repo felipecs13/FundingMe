@@ -5,7 +5,6 @@ import { Form, Button, Input, Slider, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
-import NavBar from '../components/Layout'
 import { message } from 'antd'
 
 const fixNumber = (number: number) => {
@@ -72,7 +71,6 @@ const Login = () => {
 
   return (
     <div>
-      <NavBar />
       <ViewContainer>
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
         {!user && <BigText>Bienvenido a FundingMe</BigText>}

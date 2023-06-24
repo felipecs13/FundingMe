@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { apiUrl } from '../styles/constants'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import Navbar from '../components/Layout'
 import { Card, Title } from './Profile'
 import { message, Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
@@ -43,7 +42,6 @@ const ProjectDetail = () => {
 
   return (
     <>
-      <Navbar />
       <Card>
         {loading ? (
           <LoadingContainer>

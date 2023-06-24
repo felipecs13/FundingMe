@@ -1,6 +1,5 @@
 import { Button, Carousel, DatePicker, Form, Input, InputNumber, Select, Upload } from 'antd'
 import { UploadOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, SafetyCertificateOutlined, PushpinOutlined, GiftOutlined } from '@ant-design/icons'
-import NavBar from '../components/Layout'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import styled from 'styled-components';
@@ -86,7 +85,6 @@ const FormProject = () => {
   }
   return (
     <div>
-      <NavBar />
       <ImgFormContainer>
         <FormContainer>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.1 }}>
@@ -162,6 +160,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.8 }}>
               <Form.Item
                 name="type_project"
+                label="Tipo de proyecto"
                 rules={[{ required: true, message: 'Ingresa el tipo de proyecto' }]}
               >
                 <StyledSelect
@@ -177,6 +176,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.9 }}>
                 <Form.Item
                   name="category"
+                  label="Categoría"
                   rules={[{ required: true, message: 'Ingresa una categoría' }]}
                 >
                   <StyledSelect
