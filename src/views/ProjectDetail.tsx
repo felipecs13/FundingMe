@@ -56,17 +56,16 @@ const ProjectDetail = () => {
               <p>{project.description}</p>
               <ImageWrapper>
                 <img
+                  alt={project.name_project}
                   src={
                     project.image
                       ? project.image
                       : 'https://source.unsplash.com/800x600/?' + project.name_project
                   }
-                  alt={project.name_project}
                 />
               </ImageWrapper>
               <p>Meta del proyecto: {project.goal_amount}</p>
               <p>Actual monto recolectado: {project.current_amount}</p>
-              
             </div>
           </>
         )}

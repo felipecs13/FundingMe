@@ -33,7 +33,7 @@ const Login = () => {
       // Redirect to home
       window.location.href = '/'
     } catch (error) {
-      message.error('Error: revise los campos ingresados.')
+      message.error('Error: correo o contraseña inválida.')
     } finally {
       setLoading(false)
     }
@@ -42,8 +42,8 @@ const Login = () => {
     <PictureForm>
       <Logo>
         <Img
-          src={LogoGreen}
           alt="Logo"
+          src={LogoGreen}
         />
         <BoldText>FundingMe</BoldText>
       </Logo>
@@ -60,8 +60,8 @@ const Login = () => {
             <Form
               form={form}
               layout="vertical"
-              requiredMark={false}
               onFinish={onFinish}
+              requiredMark={false}
             >
               <Item
                 label="Correo electrónico"
@@ -103,8 +103,8 @@ const Login = () => {
                 />
               </Item>
               <StyledButton
-                type="primary"
                 htmlType="submit"
+                type="primary"
               >
                 Entrar
               </StyledButton>
@@ -125,7 +125,7 @@ const Img = styled.img`
   max-height: 100%;
 `
 
-const BoldText = styled.h1`
+const BoldText = styled.div`
   font-size: 70px;
   font-weight: 500;
   color: ${colors.fontColor};
@@ -154,7 +154,7 @@ export const BigText = styled.div`
 `
 
 export const StyledInput = styled(Input)`
-  border-radius: 3px;
+  border-radius: 4px;
   border: 1px solid #b1b2b5;
   width: 100%;
   margin-bottom: 0px;
@@ -162,7 +162,7 @@ export const StyledInput = styled(Input)`
 `
 
 export const StyledPassword = styled(Input.Password)`
-  border-radius: 3px;
+  border-radius: 4px;
   border: 1px solid #b1b2b5;
   width: 100%;
   margin-bottom: 0px;
@@ -170,23 +170,33 @@ export const StyledPassword = styled(Input.Password)`
 `
 
 export const Item = styled(Form.Item)`
-  .ant-form-item-explain-error {
-    font-size: 12px;
-  }
+  width: 100%;
   label {
     font-weight: 600;
     margin: 0;
   }
+  .ant-form-item-explain-error {
+    font-size: 12px;
+  }
+  .ant-input-prefix,
+  .ant-input-number-prefix {
+    padding-right: 5px;
+  }
   .ant-form-item-label {
     padding: 2px;
+  }
+  .ant-select-status-error .ant-select-selector {
+    border-color: #ff4d4f !important;
+  }
+  .ant-select-status-error .ant-select-selector:hover {
+    border-color: #ffa39e !important;
   }
 `
 
 export const StyledButton = styled(Button)`
   width: 100%;
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: ${colors.primary};
-  color: 32px;
   font-size: 14px;
   &:hover {
     background-color: ${colors.secondary} !important;

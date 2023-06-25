@@ -13,7 +13,7 @@ import {
 } from './Login'
 import { Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
-import { rutFormatter } from '../helpers/rutFormatter'
+import { rutFormatter } from '../helpers/formatters'
 
 const Register = () => {
   const [form] = Form.useForm()
@@ -54,7 +54,7 @@ const Register = () => {
       // Redirect to login page
       window.location.href = '/'
     } catch (error) {
-      message.error('Error: revise los campos ingresados.')
+      message.error('Error: correo registrado o RUT inexistente.')
     } finally {
       setLoading(false)
     }
@@ -79,12 +79,12 @@ const Register = () => {
           <Form
             form={form}
             layout="vertical"
-            requiredMark={false}
             onFinish={onFinish}
+            requiredMark={false}
           >
             <Item
-              name="name"
               label="Nombre"
+              name="name"
               rules={[
                 {
                   required: true,
@@ -98,8 +98,8 @@ const Register = () => {
               />
             </Item>
             <Item
-              name="rut"
               label="RUT"
+              name="rut"
               rules={[
                 {
                   required: true,
@@ -134,8 +134,8 @@ const Register = () => {
               />
             </Item>
             <Item
-              name="password"
               label="Contraseña"
+              name="password"
               rules={[
                 {
                   required: true,
@@ -154,9 +154,9 @@ const Register = () => {
               />
             </Item>
             <Item
-              name="confirmPassword"
-              label="Confirmar contraseña"
               dependencies={['password']}
+              label="Confirmar contraseña"
+              name="confirmPassword"
               rules={[
                 {
                   required: true,
@@ -174,8 +174,8 @@ const Register = () => {
               />
             </Item>
             <StyledButton
-              type="primary"
               htmlType="submit"
+              type="primary"
             >
               Crear
             </StyledButton>

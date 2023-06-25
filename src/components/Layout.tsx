@@ -38,8 +38,8 @@ const Layout = () => {
         whileTap={{ scale: 0.98 }}
       >
         <Img
-          src={LogoImg}
           alt="Logo"
+          src={LogoImg}
         />
         <BoldText>FundingMe</BoldText>
       </Logo>
@@ -82,7 +82,7 @@ const Img = styled.img`
   max-height: 100%;
 `
 
-const BoldText = styled.h1`
+const BoldText = styled.div`
   font-size: 24px;
   font-weight: 500;
   color: ${colors.background};
@@ -100,7 +100,7 @@ const StyledLink = styled(Link)`
   font-weight: 500;
   color: ${colors.background};
   text-decoration: inherit;
-
+  transition: color 0.3s ease-in-out;
   &:hover {
     color: ${colors.fontColor};
   }

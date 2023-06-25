@@ -1,64 +1,73 @@
-import { Button, Carousel, DatePicker, Form, Input, InputNumber, Select, Upload } from 'antd'
-import { UploadOutlined, IdcardOutlined, BankOutlined, FileTextOutlined, SafetyCertificateOutlined, PushpinOutlined, GiftOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Form, InputNumber, Select, Upload, Input } from 'antd'
+import {
+  UploadOutlined,
+  IdcardOutlined,
+  BankOutlined,
+  SafetyCertificateOutlined,
+  PushpinOutlined,
+  GiftOutlined,
+} from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import styled from 'styled-components';
+import styled from 'styled-components'
+import moment from 'moment'
 import { colors, apiUrl } from '../styles/constants'
+import { Card as BaseCard } from './Profile'
+import { StyledInput, Item, StyledButton } from './Login'
+import { formatterNumber, parserNumber } from '../helpers/formatters'
 
-interface User{
+interface User {
   token: string
   id: number
   email: string
-  rut : string
-  name : string
+  rut: string
+  name: string
 }
 
 const FormProject = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
-  const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '' });
-  
+  const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '' })
+
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('user')
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser))
     }
-  }, []);
+  }, [])
   const onFinish = async (values: {
-    "name_project": string,
-    "bank_account": string,
-    "description": string,
-    "minimum_donation": number,
-    "type_project" : string,
-    "goal_amount": number,
-    "image": any | null
-    "location": string
-    "end_date": string
-    "category": string
+    name_project: string
+    bank_account: string
+    description: string
+    minimum_donation: number
+    type_project: string
+    goal_amount: number
+    image: any | null
+    location: string
+    end_date: string
+    category: string
   }) => {
     console.log('Success:', values)
     setLoading(true)
     try {
-      const photo = values.image?.fileList[0].originFileObj;
+      const photo = values.image?.fileList[0].originFileObj
       console.log(photo)
-      const formData = new FormData();
-      formData.append('project[image]', photo);
-      formData.append('project[name_project]', values.name_project);
-      formData.append('project[bank_account]', values.bank_account);
-      formData.append('project[description]', values.description);
-      formData.append('project[minimum_donation]', values.minimum_donation.toString());
-      formData.append('project[type_project]', values.type_project);
-      formData.append('project[goal_amount]', values.goal_amount.toString());
-      formData.append('project[location]', values.location);
-      formData.append('project[end_date]', values.end_date);
-      formData.append('project[category]', values.category);
-
+      const formData = new FormData()
+      formData.append('project[image]', photo)
+      formData.append('project[name_project]', values.name_project)
+      formData.append('project[bank_account]', values.bank_account)
+      formData.append('project[description]', values.description)
+      formData.append('project[minimum_donation]', values.minimum_donation.toString())
+      formData.append('project[type_project]', values.type_project)
+      formData.append('project[goal_amount]', values.goal_amount.toString())
+      formData.append('project[location]', values.location)
+      formData.append('project[end_date]', values.end_date)
+      formData.append('project[category]', values.category)
 
       const data = await fetch(apiUrl + '/projects', {
         method: 'POST',
         headers: {
-          // No 'Content-Type' header
-          "Authorization" : user.token
+          Authorization: user.token,
         },
         body: formData,
       })
@@ -75,207 +84,350 @@ const FormProject = () => {
     }
   }
 
-  
-
-  // const onFinishFailed = (errorInfo: string) => {
-  //   console.log('Failed:', errorInfo);
-  // };
   const onReset = () => {
     form.resetFields()
   }
+
   return (
-    <div>
-      <ImgFormContainer>
-        <FormContainer>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.1 }}>
-            <BoldText>Crear tu propio proyecto 🪴</BoldText>
+    <Wrapper>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <Card>
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <BoldText>Crea tu propio proyecto 🪴</BoldText>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.2 }}>
-            <SubText>
-              ¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!
-            </SubText>
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <SubText>¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!</SubText>
           </motion.div>
 
-          <div className="Form">
-            <Form
-              form={form}
-              name="create_project"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={{ remember: true }}
-              onFinish={onFinish}
-              // onFinishFailed={onFinishFailed}
-              autoComplete="off"
+          <Form
+            autoComplete="off"
+            form={form}
+            initialValues={{ remember: true }}
+            layout="vertical"
+            name="create_project"
+            onFinish={onFinish}
+            requiredMark={false}
+            style={{ width: '100%' }}
+          >
+            <FormGrid>
+              <Column>
+                {/* descripcion del proyecto */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Item
+                    label="Descripción del proyecto"
+                    name="description"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar una descripción del proyecto',
+                      },
+                    ]}
+                  >
+                    <StyledInputText
+                      placeholder="El proyecto consiste en..."
+                      autoSize={{ minRows: 8, maxRows: 8 }}
+                    />
+                  </Item>
+                </motion.div>
+                {/* imagen del proyecto */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Item
+                    label="Imágen"
+                    name="image"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar una imagen para su proyecto',
+                      },
+                    ]}
+                  >
+                    <StyledUpload
+                      beforeUpload={() => {
+                        return false
+                      }}
+                      maxCount={1}
+                    >
+                      <ImgButton>
+                        <UploadOutlined />
+                        Sube una imagen de tu proyecto 📷{' '}
+                      </ImgButton>
+                    </StyledUpload>
+                  </Item>
+                </motion.div>
+              </Column>
+              <Column>
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                  <Item
+                    label="Nombre del proyecto"
+                    name="name_project"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar el nombre de su proyecto',
+                      },
+                    ]}
+                  >
+                    <StyledInput
+                      placeholder="Ejemplo proyecto"
+                      prefix={<IdcardOutlined />}
+                    />
+                  </Item>
+                </motion.div>
+                {/* tipo de proyecto */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Item
+                    label="Tipo de proyecto"
+                    name="type_project"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe seleccionar un tipo de proyecto',
+                      },
+                    ]}
+                  >
+                    <StyledSelect
+                      allowClear
+                      placeholder="Seleccione tipo"
+                    >
+                      <StyledSelectOption value="ONG">ONG</StyledSelectOption>
+                      <StyledSelectOption value="PERSONAL">Personal</StyledSelectOption>
+                    </StyledSelect>
+                  </Item>
+                </motion.div>
+
+                {/* ubicacion */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Item
+                    label="Ubicación"
+                    name="location"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar la locación del proyecto',
+                      },
+                    ]}
+                  >
+                    <StyledInput
+                      placeholder="Comuna, Ciudad"
+                      prefix={<PushpinOutlined />}
+                    />
+                  </Item>
+                </motion.div>
+
+                {/* fecha de termino */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Item
+                    label="Fecha de término"
+                    name="end_date"
+                    rules={[
+                      {
+                        required: true,
+                        message:
+                          'Debe ingresar una fecha máxima de término para recibir donaciones',
+                      },
+                    ]}
+                  >
+                    <StyledDatePicker
+                      placeholder="dd-mm-yyyy"
+                      format={'DD-MM-YYYY'}
+                      disabledDate={(current) => {
+                        return moment().add(-1, 'days') >= current
+                      }}
+                    />
+                  </Item>
+                </motion.div>
+              </Column>
+              <Column>
+                {/* categoria */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                  <Item
+                    label="Categoría"
+                    name="category"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe seleccionar una categoría',
+                      },
+                    ]}
+                  >
+                    <StyledSelect placeholder="Selecciona categoría">
+                      <StyledSelectOption value="EDUCATION">Educación</StyledSelectOption>
+                      <StyledSelectOption value="HEALTH">Salud</StyledSelectOption>
+                      <StyledSelectOption value="ENVIRONMENT">Medio ambiente</StyledSelectOption>
+                      <StyledSelectOption value="ANIMALS">Animales</StyledSelectOption>
+                    </StyledSelect>
+                  </Item>
+                </motion.div>
+                {/* cuenta bancaria */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Item
+                    label="Cuenta bancaria"
+                    name="bank_account"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar su cuenta bancaria',
+                      },
+                    ]}
+                  >
+                    <StyledInput
+                      placeholder="0000 0000 0000 0000"
+                      prefix={<BankOutlined />}
+                    />
+                  </Item>
+                </motion.div>
+
+                {/* monto de meta */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Item
+                    label="Monto de meta (CLP)"
+                    name="goal_amount"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar un monto de meta',
+                      },
+                    ]}
+                  >
+                    <StyledInputNumber
+                      step={10000}
+                      min={1}
+                      placeholder="$ 123.456 CLP"
+                      prefix={<SafetyCertificateOutlined />}
+                      precision={0}
+                      formatter={(value) => `$ ${formatterNumber(value)}`}
+                      parser={parserNumber}
+                    />
+                  </Item>
+                </motion.div>
+
+                {/* monto minimo de donacion */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Item
+                    label="Monto mínimo de donación (CLP)"
+                    name="minimum_donation"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar un monto mínimo de donación',
+                      },
+                    ]}
+                  >
+                    <StyledInputNumber
+                      step={1000}
+                      min={1}
+                      placeholder="$ 1.234 CLP"
+                      prefix={<GiftOutlined />}
+                      precision={0}
+                      formatter={(value) => `$ ${formatterNumber(value)}`}
+                      parser={parserNumber}
+                    />
+                  </Item>
+                </motion.div>
+              </Column>
+            </FormGrid>
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
             >
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.4 }}>
-                <Form.Item
-                  name="name_project"
-                  rules={[{ required: true, message: 'Ingresa el nombre de tu proyecto' }]}
+              <ButtonContainer>
+                <ButtonSubmit
+                  htmlType="submit"
+                  type="primary"
                 >
-                  <StyledInput
-                    placeholder="Nombre del proyecto"
-                    prefix={<IdcardOutlined />}
-                  />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.5 }}>
-                <Form.Item
-                  name="bank_account"
-                  rules={[{ required: true, message: 'Ingresa tu cuenta bancaria' }]}
+                  Enviar proyecto
+                </ButtonSubmit>
+                <ButtonSubmit
+                  htmlType="button"
+                  type="primary"
+                  onClick={onReset}
                 >
-                  <StyledInput
-                    placeholder="Cuenta bancaria"
-                    prefix={<BankOutlined />}
-                  />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.6 }}>
-                <Form.Item
-                  name="description"
-                  rules={[{ required: true, message: 'Ingresa la descripción de tu proyecto' }]}
-                >
-                  <StyledInput 
-                    placeholder="Descripción del proyecto"
-                    prefix={<FileTextOutlined />}
-                  />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.7 }}>
-                <Form.Item
-                  name="goal_amount"
-                  rules={[{ required: true, message: 'Ingresa el monto meta' }]}
-                >
-                  <StyledInputNumber
-                    placeholder="Monto meta del proyecto (CLP)"
-                    prefix={<SafetyCertificateOutlined />}
-                  />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.8 }}>
-              <Form.Item
-                name="type_project"
-                label="Tipo de proyecto"
-                rules={[{ required: true, message: 'Ingresa el tipo de proyecto' }]}
-              >
-                <StyledSelect
-                  placeholder="Selecciona tipo de proyecto"
-                  allowClear
-                >
-                  <StyledSelectOption value="ONG">Ong</StyledSelectOption>
-                  <StyledSelectOption value="PERSONAL">Personal</StyledSelectOption>
-                </StyledSelect>
-              </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.9 }}>
-                <Form.Item
-                  name="category"
-                  label="Categoría"
-                  rules={[{ required: true, message: 'Ingresa una categoría' }]}
-                >
-                  <StyledSelect
-                    placeholder="Selecciona categoría"
-                  >
-                    <StyledSelectOption value="EDUCATION">Educación</StyledSelectOption>
-                    <StyledSelectOption value="HEALTH">Salud</StyledSelectOption>
-                    <StyledSelectOption value="ENVIRONMENT">Medio ambiente</StyledSelectOption>
-                    <StyledSelectOption value="ANIMALS">Animales</StyledSelectOption>
-                  </StyledSelect>
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
-                <Form.Item
-                  name="location"
-                  rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
-                >
-                  <StyledInput
-                    placeholder="Locación del proyecto"
-                    prefix={<PushpinOutlined />}
-                  />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
-                <Form.Item
-                  name="end_date"
-                  rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
-                >
-                  <DatePicker placeholder="Fecha de término" />
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1.1 }}>
-                <Form.Item
-                  name="minimum_donation"
-                  rules={[{ required: true, message: 'Ingresa un monto mínimo de donación' }]}
-                >
-                  <StyledInputNumber
-                    placeholder="Monto mínimo de donación (CLP)"
-                    prefix={<GiftOutlined />}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Imágen"
-                  name="image"
-                >
-                  <Upload beforeUpload={(_) => {return false}} maxCount={1}>
-                    <Button icon={<UploadOutlined />}>Sube una imagen de tu proyecto 📷 </Button>
-                  </Upload>
-                </Form.Item>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1.2 }}>
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                  >
-                    Enviar proyecto
-                  </Button>
-                  <Button
-                    htmlType="button"
-                    onClick={onReset}
-                  >
-                    Limpiar campos
-                  </Button>
-                </Form.Item>
-              </motion.div>
-            </Form>
-          </div>
-        </FormContainer>
-      </ImgFormContainer>
-    </div>
+                  Limpiar campos
+                </ButtonSubmit>
+              </ButtonContainer>
+            </motion.div>
+          </Form>
+        </Card>
+      </motion.div>
+    </Wrapper>
   )
 }
 
-export const FormContainer = styled(motion.div)`
-  padding: 2%;
-  width: 60%;
-  margin-left: 30%;
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  text {
-    font-size: 14px;
-    font-weight: 400;
-    text-align: center;
-    margin-bottom: 20px;
-  }
+  align-items: center;
 `
 
-export const ImgFormContainer = styled.div`
-  flex-direction: row;
-  display: flex;
+const Card = styled(BaseCard)`
+  max-width: 100%;
+  width: 1200px;
+  align-items: center;
+`
+
+const FormGrid = styled.div`
+  padding: 1rem;
+  gap: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
 `
 
-const BoldText = styled.h1`
+const BoldText = styled.div`
   font-size: 25px;
   font-weight: 600;
   color: ${colors.fontColor};
@@ -287,36 +439,84 @@ const SubText = styled.h1`
   color: ${colors.fontColor};
 `
 
-export const StyledInput = styled(Input)`
-  border-radius: 2px;
-  border: 1px solid #b1b2b5;
-  width: 120%;
-  margin-bottom: 0px;
-  padding: 5px 10px;
-`
-
 export const StyledInputNumber = styled(InputNumber)`
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid #b1b2b5;
-  width: 120%;
+  width: 100%;
   margin-bottom: 0px;
-  padding: 5px 10px;
+
+  .ant-input-number-input-wrap {
+    height: 33.6px;
+  }
 `
+
 export const StyledSelect = styled(Select)`
-
+  .ant-select-selector {
+    height: 33.6px !important;
+    border-radius: 4px !important;
+    border: 1px solid #b1b2b5 !important;
+    :hover {
+      border-color: ${colors.primary} !important;
+    }
+  }
 `
 
-export const StyledCarousel = styled(Carousel)`
-  width: 50%;
-  height: 100%;
-`
-
-export const StyledSelectOption = styled(Select.Option)`
-  border-radius: 2px;
+const StyledDatePicker = styled(DatePicker)`
+  border-radius: 4px;
   border: 1px solid #b1b2b5;
   width: 100%;
   margin-bottom: 0px;
 `
 
+const StyledInputText = styled(Input.TextArea)`
+  border-radius: 4px;
+  border: 1px solid #b1b2b5;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 0px;
+`
+
+const Column = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const StyledUpload = styled(Upload)`
+  .ant-upload-select {
+    width: 100%;
+  }
+`
+
+export const StyledSelectOption = styled(Select.Option)``
+
+const ImgButton = styled(Button)`
+  width: 100%;
+  height: 33.6px;
+  text-align: left;
+  border-radius: 4px;
+  border: 1px solid #b1b2b5;
+  :hover {
+    border-color: ${colors.primary};
+  }
+  span {
+    color: rgba(48, 50, 54, 0.8);
+    svg path {
+      color: #494b4e;
+    }
+  }
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+`
+
+const ButtonSubmit = styled(StyledButton)`
+  width: 200px;
+`
 
 export default FormProject
