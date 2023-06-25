@@ -42,6 +42,7 @@ const FormProject = () => {
     minimum_donation: number
     type_project: string
     goal_amount: number
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     image: any | null
     location: string
     end_date: string
@@ -51,7 +52,6 @@ const FormProject = () => {
     setLoading(true)
     try {
       const photo = values.image?.fileList[0].originFileObj
-      console.log(photo)
       const formData = new FormData()
       formData.append('project[image]', photo)
       formData.append('project[name_project]', values.name_project)
