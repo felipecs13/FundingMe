@@ -5,4 +5,8 @@ export const colors = {
   fontColor: '#303236',
 }
 
+export const fonts = {
+  primary: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+}
+
 export const apiUrl = 'https://softdeleteiic3143.onrender.com'

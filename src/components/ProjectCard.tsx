@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { colors } from '../styles/constants';
-import { motion } from 'framer-motion';
+import React from 'react'
+import styled from 'styled-components'
+import { colors } from '../styles/constants'
+import { motion } from 'framer-motion'
 
 interface ProjectCardProps {
   name: string;
@@ -14,23 +14,24 @@ interface ProjectCardProps {
 }
 
 export const fixNumber = (number: number) => {
-    return number.toLocaleString('es-AR');
+    return number.toLocaleString('es-AR')
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount, collectedAmount, image, index, id }) => {
-  const percentage = collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100;
+  const percentage = collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100
 
   return (
     <motion.div
+        animate={{ opacity: 1, y: 0, transition : { duration: 0.5, delay: index * 0.1 } }}
+        initial={{ opacity: 0, y: 50 }}
+        onClick={() => window.location.href = '/project/' + id}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.99 }}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0, transition : { duration: 0.5, delay: index * 0.1 } }}
-        onClick={() => window.location.href = '/project/' + id}
     >
         <Wrapper>
         <ImageWrapper>
-            <img src={image} alt={name} />
+            <img alt={name}
+src={image} />
         </ImageWrapper>
         <Content>
             <h2>{name}</h2>
@@ -54,8 +55,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount
         </Content>
         </Wrapper>
     </motion.div>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -81,7 +82,7 @@ const Wrapper = styled.div`
   cursor: pointer;
   background-color: #f5f5f5;
 
-`;
+`
 
 const ImageWrapper = styled.div`
   height: 45%;
@@ -92,7 +93,7 @@ const ImageWrapper = styled.div`
     height: 100%;
     object-fit: cover;
   }
-`;
+`
 
 const Content = styled.div`
   padding: 0.75rem;
@@ -112,7 +113,7 @@ const Content = styled.div`
     margin-bottom: 10px;
     margin-top: 0px;
   }
-`;
+`
 
 const ProgressBar = styled.div`
   width: 100%;
@@ -120,7 +121,7 @@ const ProgressBar = styled.div`
   background-color: #eee;
   border-radius: 5px;
   position: relative;
-`;
+`
 
 const Progress = styled.div<{ percentage: number }>`
   width: ${({ percentage }) => percentage}%;
@@ -131,13 +132,13 @@ const Progress = styled.div<{ percentage: number }>`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const ProgressLabel = styled.span`
   color: white;
   font-size: 0.75rem;
   font-weight: 500; 
   z-index: 1;
-`;
+`
 
-export default ProjectCard;
+export default ProjectCard

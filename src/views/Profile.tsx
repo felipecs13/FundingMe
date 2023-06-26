@@ -74,8 +74,8 @@ const Profile = () => {
           <>
             <Title>Perfil</Title>
             <Img
-              src={dataUser.image || NoImg}
               alt={dataUser.name}
+              src={dataUser.image || NoImg}
             />
             <FieldInfo>
               <BoldText>Nombre</BoldText>
@@ -112,6 +112,7 @@ export const Card = styled.div`
   padding: 1.5rem;
   color: ${colors.fontColor};
   font-size: 14px;
+  background-color: white;
 `
 
 const FieldInfo = styled.div`

@@ -33,7 +33,7 @@ const Login = () => {
       // Redirect to home
       window.location.href = '/'
     } catch (error) {
-      message.error('Error: revise los campos ingresados.')
+      message.error('Error: correo o contraseña inválida.')
     } finally {
       setLoading(false)
     }
@@ -42,8 +42,8 @@ const Login = () => {
     <PictureForm>
       <Logo>
         <Img
-          src={LogoGreen}
           alt="Logo"
+          src={LogoGreen}
         />
         <BoldText>FundingMe</BoldText>
       </Logo>
@@ -57,19 +57,23 @@ const Login = () => {
         <>
           <FormContainer>
             <BigText>Inicia sesión</BigText>
-
             <Form
               form={form}
               layout="vertical"
-              requiredMark={false}
               onFinish={onFinish}
+              requiredMark={false}
             >
               <Item
+                label="Correo electrónico"
                 name="email"
                 rules={[
                   {
                     required: true,
                     message: 'El correo electrónico es requerido',
+                  },
+                  {
+                    type: 'email',
+                    message: 'El correo electrónico no es válido',
                   },
                 ]}
               >
@@ -79,28 +83,34 @@ const Login = () => {
                 />
               </Item>
               <Item
+                label="Contraseña"
                 name="password"
                 rules={[
                   {
                     required: true,
                     message: 'La contraseña es requerida',
                   },
+                  {
+                    min: 8,
+                    max: 14,
+                    message: 'La contraseña debe tener entre 8 y 14 caracteres',
+                  },
                 ]}
               >
-                <StyledInput
+                <StyledPassword
                   placeholder="Contraseña"
                   type="password"
                 />
               </Item>
               <StyledButton
-                type="primary"
                 htmlType="submit"
+                type="primary"
               >
                 Entrar
               </StyledButton>
             </Form>
             <Footer>
-              <div>¿No tienes una cuenta? </div>
+              <div>¿No tienes una cuenta?</div>
               <StyledLink to={'/register'}>Crea una aquí</StyledLink>
             </Footer>
           </FormContainer>
@@ -115,7 +125,7 @@ const Img = styled.img`
   max-height: 100%;
 `
 
-const BoldText = styled.h1`
+const BoldText = styled.div`
   font-size: 70px;
   font-weight: 500;
   color: ${colors.fontColor};
@@ -139,12 +149,20 @@ export const FormContainer = styled.div`
 export const BigText = styled.div`
   margin: 20px 0px;
   font-size: 36px;
-  font-weight: 500;
+  font-weight: 600;
   color: ${colors.fontColor};
 `
 
 export const StyledInput = styled(Input)`
-  border-radius: 2px;
+  border-radius: 4px;
+  border: 1px solid #b1b2b5;
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 5px 10px;
+`
+
+export const StyledPassword = styled(Input.Password)`
+  border-radius: 4px;
   border: 1px solid #b1b2b5;
   width: 100%;
   margin-bottom: 0px;
@@ -152,25 +170,33 @@ export const StyledInput = styled(Input)`
 `
 
 export const Item = styled(Form.Item)`
-  :hover {
-    border-color: #00c16c;
-  }
-  :focus {
-    border-color: #00c16c;
-    box-shadow: 0 0 0 2px rgba(0, 193, 108, 0.1);
-    border-inline-end-width: 1px;
-    outline: 0;
+  width: 100%;
+  label {
+    font-weight: 600;
+    margin: 0;
   }
   .ant-form-item-explain-error {
     font-size: 12px;
+  }
+  .ant-input-prefix,
+  .ant-input-number-prefix {
+    padding-right: 5px;
+  }
+  .ant-form-item-label {
+    padding: 2px;
+  }
+  .ant-select-status-error .ant-select-selector {
+    border-color: #ff4d4f !important;
+  }
+  .ant-select-status-error .ant-select-selector:hover {
+    border-color: #ffa39e !important;
   }
 `
 
 export const StyledButton = styled(Button)`
   width: 100%;
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: ${colors.primary};
-  color: 32px;
   font-size: 14px;
   &:hover {
     background-color: ${colors.secondary} !important;
