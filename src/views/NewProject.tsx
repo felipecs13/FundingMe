@@ -112,6 +112,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.4 }}>
                 <Form.Item
                   name="name_project"
+                  label="Nombre del proyecto"
                   rules={[{ required: true, message: 'Ingresa el nombre de tu proyecto' }]}
                 >
                   <StyledInput
@@ -124,6 +125,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.5 }}>
                 <Form.Item
                   name="bank_account"
+                  label="Cuenta bancaria"
                   rules={[{ required: true, message: 'Ingresa tu cuenta bancaria' }]}
                 >
                   <StyledInput
@@ -136,6 +138,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.6 }}>
                 <Form.Item
                   name="description"
+                  label="Descripción del proyecto"
                   rules={[{ required: true, message: 'Ingresa la descripción de tu proyecto' }]}
                 >
                   <StyledInput 
@@ -148,6 +151,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 0.7 }}>
                 <Form.Item
                   name="goal_amount"
+                  label="Monto meta"
                   rules={[{ required: true, message: 'Ingresa el monto meta' }]}
                 >
                   <StyledInputNumber
@@ -193,6 +197,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
                 <Form.Item
                   name="location"
+                  label="Locación"
                   rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
                 >
                   <StyledInput
@@ -205,6 +210,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1 }}>
                 <Form.Item
                   name="end_date"
+                  label="Fecha de término"
                   rules={[{ required: true, message: 'Ingresa la locación del proyecto' }]}
                 >
                   <DatePicker placeholder="Fecha de término" />
@@ -214,6 +220,7 @@ const FormProject = () => {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y : 0 }} transition={{ duration: 0.5, delay : 1.1 }}>
                 <Form.Item
                   name="minimum_donation"
+                  label="Monto mínimo de donación"
                   rules={[{ required: true, message: 'Ingresa un monto mínimo de donación' }]}
                 >
                   <StyledInputNumber
