@@ -4,7 +4,6 @@ import { colors } from './constants'
 const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
-    transition: color 0.3s ease-in-out;
   }
   body {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
