@@ -4,7 +4,24 @@ import Register from '../src/views/Register';
 jest.mock('../src/assets/social_project.jpg', () => 'social_project.jpg');
 jest.mock('../src/assets/logo_green.png', () => 'logo_green.png');
 describe('Register component', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      }))
+    });
+});
   test('should submit the form with valid data', async () => {
+    
+  
     render(<Register />);
 
     // Fill in the form fields
@@ -18,7 +35,7 @@ describe('Register component', () => {
 
     // Wait for the asynchronous code to execute
     await waitFor(() => {
-      expect(window.location.href).toBe('/');
+      expect(window.location.href).toBe('http://localhost/');
     });
   });
 

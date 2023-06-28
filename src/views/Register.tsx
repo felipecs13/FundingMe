@@ -13,6 +13,7 @@ import {
 } from './Login'
 import { Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
+import { BrowserRouter } from 'react-router-dom'
 import { rutFormatter } from '../helpers/formatters'
 
 const Register = () => {
@@ -181,8 +182,10 @@ const Register = () => {
             </StyledButton>
           </Form>
           <Footer>
+            <BrowserRouter>
             <div>¿Ya tienes una cuenta? </div>
             <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
+            </BrowserRouter>
           </Footer>
         </FormContainer>
       )}

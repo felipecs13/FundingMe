@@ -111,7 +111,7 @@ const FormProject = () => {
           >
             <SubText>¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!</SubText>
           </motion.div>
-
+          
           <Form
             autoComplete="off"
             form={form}
@@ -231,7 +231,7 @@ const FormProject = () => {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <Item
-                    label="Ubicación"
+                    label="Locación"
                     name="location"
                     rules={[
                       {
@@ -321,7 +321,7 @@ const FormProject = () => {
                     />
                   </Item>
                 </motion.div>
-
+                
                 {/* monto de meta */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -329,7 +329,7 @@ const FormProject = () => {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <Item
-                    label="Monto de meta (CLP)"
+                    label="Monto meta"
                     name="goal_amount"
                     rules={[
                       {
@@ -357,7 +357,7 @@ const FormProject = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
                   <Item
-                    label="Monto mínimo de donación (CLP)"
+                    label="Monto mínimo de donación"
                     name="minimum_donation"
                     rules={[
                       {
