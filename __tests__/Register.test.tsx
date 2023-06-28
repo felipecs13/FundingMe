@@ -53,7 +53,7 @@ describe('Register component', () => {
 
     // Wait for the asynchronous code to execute
     await waitFor(() => {
-      expect(screen.getByText('Error: revise los campos ingresados.')).toBeInTheDocument();
+      expect(screen.getByText('Error: correo registrado o RUT inexistente.')).toBeInTheDocument();
     });
   });
 });

@@ -1,6 +1,9 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import FormProject from '../src/views/NewProject';
 
+jest.mock('../src/assets/logo_green.png', () => 'logo_green.png');
+jest.mock('../src/assets/social_project.jpg', () => 'social_project.jpg');
+jest.mock('../src/assets/no_image.jpg', () => 'no_image.jpg');
 describe('FormProject', () => {
 
     beforeAll(() => {
