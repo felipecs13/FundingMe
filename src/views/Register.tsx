@@ -1,19 +1,18 @@
-import styled from 'styled-components'
 import PictureForm from '../components/PictureForm'
-import { colors } from '../styles/constants'
 import { Form, message } from 'antd'
 import { useState } from 'react'
 import {
   Footer,
-  StyledLink,
   StyledButton,
   StyledInput,
+  StyledPassword,
   FormContainer,
   BigText,
-  Item as BaseItem,
+  Item,
 } from './Login'
 import { Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
+import { rutFormatter } from '../helpers/formatters'
 
 const Register = () => {
   const [form] = Form.useForm()
@@ -26,6 +25,10 @@ const Register = () => {
     } else {
       return Promise.resolve()
     }
+  }
+
+  const handleLinkToLogin = () => {
+    window.location.href = '/login'
   }
 
   const onFinish = async (values: {
@@ -54,10 +57,15 @@ const Register = () => {
       // Redirect to login page
       window.location.href = '/'
     } catch (error) {
-      message.error('Error: revise los campos ingresados.')
+      message.error('Error: correo registrado o RUT inexistente.')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleRut = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rut = e.target.value
+    form.setFieldsValue({ rut: rutFormatter(rut) })
   }
 
   return (
@@ -74,37 +82,38 @@ const Register = () => {
           <Form
             form={form}
             layout="vertical"
-            requiredMark={false}
             onFinish={onFinish}
+            requiredMark={false}
           >
             <Item
-              name="name"
               label="Nombre"
+              name="name"
               rules={[
                 {
                   required: true,
-                  message: 'Tu nombre es requerido',
+                  message: 'Debe ingresar su nombre',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Ingresa tus nombre"
+                placeholder="Nombre Apellido"
                 type="text"
               />
             </Item>
-            {/* TODO: Add RUT validation and format */}
             <Item
-              name="rut"
               label="RUT"
+              name="rut"
               rules={[
                 {
                   required: true,
-                  message: 'Tu rut es requerido',
+                  message: 'Debe ingresar su RUT',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Ingresa tu rut"
+                maxLength={12}
+                onChange={handleRut}
+                placeholder="12.345.678-9"
                 type="text"
               />
             </Item>
@@ -114,38 +123,47 @@ const Register = () => {
               rules={[
                 {
                   required: true,
-                  message: 'El correo electrónico es requerido',
+                  message: 'Debe ingresar un correo electrónico',
+                },
+                {
+                  type: 'email',
+                  message: 'El correo electrónico no es válido',
                 },
               ]}
             >
               <StyledInput
-                placeholder="Correo electrónico"
+                placeholder="ejemplo@ejemplo.com"
                 type="email"
               />
             </Item>
             <Item
-              name="password"
               label="Contraseña"
+              name="password"
               rules={[
                 {
                   required: true,
-                  message: 'La contraseña es requerida',
+                  message: 'Debe ingresar una contraseña',
+                },
+                {
+                  min: 8,
+                  max: 14,
+                  message: 'La contraseña debe tener entre 8 y 14 caracteres',
                 },
               ]}
             >
-              <StyledInput
+              <StyledPassword
                 placeholder="Contraseña"
                 type="password"
               />
             </Item>
             <Item
-              name="confirmPassword"
-              label="Confirmar contraseña"
               dependencies={['password']}
+              label="Confirmar contraseña"
+              name="confirmPassword"
               rules={[
                 {
                   required: true,
-                  message: 'Por favor confirma tu contraseña',
+                  message: 'Debe confirmar su contraseña',
                 },
                 {
                   validator: (_, value) => validatePasswords('password', value),
@@ -153,37 +171,26 @@ const Register = () => {
                 },
               ]}
             >
-              <StyledInput
-                placeholder="Ingresa nuevamente tu contraseña"
+              <StyledPassword
+                placeholder="Repite contraseña"
                 type="password"
               />
             </Item>
             <StyledButton
-              type="primary"
               htmlType="submit"
+              type="primary"
             >
               Crear
             </StyledButton>
           </Form>
           <Footer>
             <div>¿Ya tienes una cuenta? </div>
-            <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
+            <button onClick={handleLinkToLogin}>Ingresa aquí</button>
           </Footer>
         </FormContainer>
       )}
     </PictureForm>
   )
 }
-
-const Item = styled(BaseItem)`
-  label {
-    font-weight: 500;
-    font-color: ${colors.fontColor};
-    margin: 0;
-  }
-  .ant-form-item-label {
-    padding: 2px;
-  }
-`
 
 export default Register

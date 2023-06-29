@@ -10,8 +10,8 @@ const PictureForm = ({children}: IPictureForm) => {
   return (
     <Wrapper>
       <ContainerImg
-        src={SocialProjectImg}
         alt="imagen"
+        src={SocialProjectImg}
       />
       <Content>
         {children}

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { apiUrl } from '../styles/constants'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import Navbar from '../components/Layout'
 import { Card, Title } from './Profile'
 import { message, Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
@@ -43,7 +42,6 @@ const ProjectDetail = () => {
 
   return (
     <>
-      <Navbar />
       <Card>
         {loading ? (
           <LoadingContainer>
@@ -55,20 +53,19 @@ const ProjectDetail = () => {
           <>
             <Title>{project.name_project}</Title>
             <div>
-              <p>Project Description: {project.description}</p>
+              <p>{project.description}</p>
               <ImageWrapper>
                 <img
+                  alt={project.name_project}
                   src={
                     project.image
                       ? project.image
                       : 'https://source.unsplash.com/800x600/?' + project.name_project
                   }
-                  alt={project.name_project}
                 />
               </ImageWrapper>
               <p>Meta del proyecto: {project.goal_amount}</p>
               <p>Actual monto recolectado: {project.current_amount}</p>
-              
             </div>
           </>
         )}

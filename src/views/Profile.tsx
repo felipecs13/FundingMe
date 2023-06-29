@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { LoadingContainer } from './Dashboard'
 import { apiUrl } from '../styles/constants'
-import NavBar from '../components/Layout'
 import { Spin } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
@@ -64,7 +63,6 @@ const Profile = () => {
 
   return (
     <>
-      <NavBar />
       <Card>
         {loading ? (
           <LoadingContainer>
@@ -76,8 +74,8 @@ const Profile = () => {
           <>
             <Title>Perfil</Title>
             <Img
-              src={dataUser.image || NoImg}
               alt={dataUser.name}
+              src={dataUser.image || NoImg}
             />
             <FieldInfo>
               <BoldText>Nombre</BoldText>
@@ -114,6 +112,7 @@ export const Card = styled.div`
   padding: 1.5rem;
   color: ${colors.fontColor};
   font-size: 14px;
+  background-color: white;
 `
 
 const FieldInfo = styled.div`

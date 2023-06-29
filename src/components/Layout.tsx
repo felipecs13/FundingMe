@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import LogoImg from '../assets/logo_white.png'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { colors } from '../styles/constants'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
@@ -30,6 +30,7 @@ const Layout = () => {
   }
 
   return (
+    <>
     <Wrapper>
       <Logo
         onClick={goToHome}
@@ -37,8 +38,8 @@ const Layout = () => {
         whileTap={{ scale: 0.98 }}
       >
         <Img
-          src={LogoImg}
           alt="Logo"
+          src={LogoImg}
         />
         <BoldText>FundingMe</BoldText>
       </Logo>
@@ -52,6 +53,9 @@ const Layout = () => {
         {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
       </ContainerLinks>
     </Wrapper>
+    <Outlet />
+    </>
+    
   )
 }
 
@@ -78,7 +82,7 @@ const Img = styled.img`
   max-height: 100%;
 `
 
-const BoldText = styled.h1`
+const BoldText = styled.div`
   font-size: 24px;
   font-weight: 500;
   color: ${colors.background};
@@ -96,7 +100,7 @@ const StyledLink = styled(Link)`
   font-weight: 500;
   color: ${colors.background};
   text-decoration: inherit;
-
+  transition: color 0.3s ease-in-out;
   &:hover {
     color: ${colors.fontColor};
   }

@@ -1,11 +1,10 @@
 import styled from 'styled-components'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, SetStateAction } from 'react'
 import { colors, apiUrl } from '../styles/constants'
 import { Form, Button, Input, Slider, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
-import NavBar from '../components/Layout'
 import { message } from 'antd'
 
 const fixNumber = (number: number) => {
@@ -72,7 +71,6 @@ const Login = () => {
 
   return (
     <div>
-      <NavBar />
       <ViewContainer>
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
         {!user && <BigText>Bienvenido a FundingMe</BigText>}
@@ -89,11 +87,10 @@ const Login = () => {
             <ProjectsContainer>
               {filteredProjects.map((project, index) => (
                 <ProjectCard
-                  id={project.id}
-                  name={project.name_project}
+                  collectedAmount={project.current_amount}
                   description={project.description}
                   goalAmount={project.goal_amount}
-                  collectedAmount={project.current_amount}
+                  id={project.id}
                   image={
                     project.image
                       ? project.image
@@ -101,6 +98,7 @@ const Login = () => {
                   }
                   index={index}
                   key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
+                  name={project.name_project}
                 />
               ))}
               {filteredProjects.length === 0 && (
@@ -108,37 +106,39 @@ const Login = () => {
               )}
             </ProjectsContainer>
             <FiltersContainer
-              initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               <FilterTitle>Filtra los proyectos 🔍</FilterTitle>
               <BoldText2>Encuentra tu proyecto favorito 👀</BoldText2>
               <StyledInput
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setSearchText(e.target.value)
+                }
                 placeholder="Nombre del proyecto"
-                onChange={(e) => setSearchText(e.target.value)}
               />
               <BoldText2>Filtrar por donación mínima 💰</BoldText2>
               <StyledInput
-                placeholder="Donación mínima requerida"
-                onChange={(e) =>
+                onChange={(e: { target: { value: string } }) =>
                   setMinDonationRequired(parseInt(e.target.value.replace(/\D/g, '')))
                 }
+                placeholder="Donación mínima requerida"
               />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
               <Slider
-                range
-                min={0}
-                max={maxPrice}
                 defaultValue={[minPrice, maxPrice]}
+                max={maxPrice}
+                min={0}
                 onChange={(value) => setPriceRange(value)}
+                range
               />
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
               </text>
               <StyledButton
-                type="primary"
                 onClick={handleFilterButton}
+                type="primary"
               >
                 Filtrar
               </StyledButton>
