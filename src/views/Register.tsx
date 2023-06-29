@@ -182,10 +182,8 @@ const Register = () => {
             </StyledButton>
           </Form>
           <Footer>
-            <BrowserRouter>
             <div>¿Ya tienes una cuenta? </div>
             <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
-            </BrowserRouter>
           </Footer>
         </FormContainer>
       )}
