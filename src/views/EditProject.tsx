@@ -117,7 +117,7 @@ const FormEditProject = () => {
       formData.append('project[end_date]', values.end_date)
       formData.append('project[category]', values.category)
 
-      const data = await fetch(apiUrl + '/projects', {
+      const data = await fetch(`${apiUrl}/projects/${id}`, {
         method: 'PUT',
         headers: {
           Authorization: user.token,
@@ -125,11 +125,11 @@ const FormEditProject = () => {
         body: formData,
       })
       console.log(data)
-      if (data.status != 201) {
+      if (data.status != 200) {
         throw new Error('Error')
       }
       // Redirect to home
-      window.location.href = '/'
+      window.location.href = `/projects/${id}`
     } catch (error) {
       setLoading(false)
       console.log(loading)
@@ -138,7 +138,18 @@ const FormEditProject = () => {
   }
 
   const onReset = () => {
-    form.resetFields()
+    form.setFieldsValue({
+      name_project: project.name_project,
+      description: project.description,
+      minimum_donation: project.minimum_donation,
+      goal_amount: project.goal_amount,
+      end_date: moment(project.end_date),
+      location: project.location,
+      category: project.category,
+      bank_account: project.bank_account,
+      type_project: project.type_project,
+      image: project.image,
+    })
   }
 
   return (
@@ -442,7 +453,7 @@ const FormEditProject = () => {
                   htmlType="submit"
                   type="primary"
                 >
-                  Enviar proyecto
+                  Editar proyecto
                 </ButtonSubmit>
                 <ButtonSubmit
                   htmlType="button"
