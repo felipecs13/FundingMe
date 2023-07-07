@@ -54,9 +54,7 @@ const FormEditProject = () => {
       }
       const data = await response.json()
       setProject(data)
-      console.log(project) 
     } catch (error) {
-      message.error('Error: problemas al cargar, intente más tarde.')
       window.location.href = '/'
     } finally {
       setLoading(false)
@@ -130,6 +128,7 @@ const FormEditProject = () => {
       window.location.href = `/project/${id}`
     } catch (error) {
       setLoading(false)
+      console.log(loading)
       console.log('Error:', error)
     }
   }
