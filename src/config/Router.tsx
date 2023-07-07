@@ -7,9 +7,9 @@ import Dashboard from '../views/Dashboard'
 import ProjectDetail from '../views/ProjectDetail'
 import Profile from '../views/Profile'
 import Layout from '../components/Layout'
+import AdminTable from '../views/AdminTable'
 import MyProjects from '../views/MyProjects'
 import FormEditProject from '../views/EditProject'
-
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -36,6 +36,11 @@ const Router = () => {
         },
         {
 
+          path: 'admin',
+          element: <AdminTable />,
+          errorElement: <NotFound />,
+        },
+        {
           path: 'my-projects',
           element: <MyProjects/>,
           errorElement: <NotFound />,
