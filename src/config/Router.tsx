@@ -7,6 +7,7 @@ import Dashboard from '../views/Dashboard'
 import ProjectDetail from '../views/ProjectDetail'
 import Profile from '../views/Profile'
 import Layout from '../components/Layout'
+import MyProjects from '../views/MyProjects'
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -31,6 +32,11 @@ const Router = () => {
           element: <Profile />,
           errorElement: <NotFound />,
         },
+        {
+          path: 'my-projects',
+          element: <MyProjects/>,
+          errorElement: <NotFound />,
+        }
       ],
     },
     {

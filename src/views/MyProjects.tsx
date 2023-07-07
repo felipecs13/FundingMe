@@ -11,14 +11,19 @@ const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
 }
 
-const Dashboard = () => {
+const MyProjects = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [projects, setProjects] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(apiUrl + '/projects/')
+      const response = await fetch(apiUrl + '/users/'+ user.id +'/projects/',{
+        headers: {
+            Authorization: user.token,
+          },
+          method: 'GET',
+      })
       if (response.status !== 200) {
         throw new Error('Error')
       }
@@ -32,12 +37,17 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    fetchProjects()
     const user = localStorage.getItem('user')
     if (user) {
       setUser(JSON.parse(user))
     }
   }, [])
+
+  useEffect(() => {
+    if (user) {
+        fetchProjects()
+      }
+    }, [user])
 
   const minPrice =
     projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
@@ -276,4 +286,4 @@ export const StyledLink = styled(Link)`
   }
 `
 
-export default Dashboard
+export default MyProjects
