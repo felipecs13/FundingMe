@@ -28,7 +28,6 @@ interface User {
 interface Project {
   name_project: string
   description: string
-  image: string
   goal_amount: number
   current_amount: number
   bank_account: string
