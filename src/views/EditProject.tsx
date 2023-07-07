@@ -56,7 +56,6 @@ const FormEditProject = () => {
       setProject(data)
       console.log(project) 
     } catch (error) {
-      message.error('Error: problemas al cargar, intente más tarde.')
       window.location.href = '/'
     } finally {
       setLoading(false)
