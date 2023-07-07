@@ -54,7 +54,6 @@ const FormEditProject = () => {
       }
       const data = await response.json()
       setProject(data)
-      console.log(project) 
     } catch (error) {
       window.location.href = '/'
     } finally {
