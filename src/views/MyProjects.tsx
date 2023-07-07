@@ -49,6 +49,10 @@ const MyProjects = () => {
       }
     }, [user])
 
+    const handleClick = (id: number) => {
+      window.location.href = '/projects/edit/' + id
+    }
+
   const minPrice =
     projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
   const maxPrice =
@@ -96,20 +100,23 @@ const MyProjects = () => {
           <DashboardContainer>
             <ProjectsContainer>
               {filteredProjects.map((project, index) => (
-                <ProjectCard
-                  collectedAmount={project.current_amount}
-                  description={project.description}
-                  goalAmount={project.goal_amount}
-                  id={project.id}
-                  image={
-                    project.image
-                      ? project.image
-                      : 'https://source.unsplash.com/800x600/?' + project.name_project
-                  }
-                  index={index}
-                  key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
-                  name={project.name_project}
-                />
+                <div>
+                  <ProjectCard
+                    collectedAmount={project.current_amount}
+                    description={project.description}
+                    goalAmount={project.goal_amount}
+                    id={project.id}
+                    image={
+                      project.image
+                        ? project.image
+                        : 'https://source.unsplash.com/800x600/?' + project.name_project
+                    }
+                    index={index}
+                    key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
+                    name={project.name_project}
+                  />
+                  <Button onClick={() => handleClick(project.id)}>Editar</Button>
+                </div>
               ))}
               {filteredProjects.length === 0 && (
                 <BoldText2>No se encontraron proyectos con los filtros realizados 😢</BoldText2>
