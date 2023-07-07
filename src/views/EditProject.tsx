@@ -123,7 +123,6 @@ const FormEditProject = () => {
         },
         body: formData,
       })
-      console.log(data)
       if (data.status != 200) {
         throw new Error('Error')
       }
@@ -131,7 +130,6 @@ const FormEditProject = () => {
       window.location.href = `/project/${id}`
     } catch (error) {
       setLoading(false)
-      console.log(loading)
       console.log('Error:', error)
     }
   }
