@@ -83,8 +83,8 @@ const MyProjects = () => {
     <div>
       <ViewContainer>
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
-        {!user && <BigText>Bienvenido a FundingMe</BigText>}
-        <BoldText>¡Explora estos proyectos y aporta para llevarlos a cabo! 🌱</BoldText>
+        {!user && <BigText>Estos son tus proyectos</BigText>}
+        <BoldText>¡Aqui podrás revisar y editar tus proyectos! 🌱</BoldText>
         {loading && (
           <LoadingContainer>
             <Spin size="large">
