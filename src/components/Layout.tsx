@@ -46,7 +46,7 @@ const Layout = () => {
       <ContainerLinks>
         <StyledLink to={'/'}>Inicio</StyledLink>
         {user && <StyledLink to={'/me'}>Mi perfil</StyledLink>}
-        {user && <StyledLink to={'/projects'}>Mis proyectos</StyledLink>}
+        {user && <StyledLink to={'my-projects'}>Mis proyectos</StyledLink>}
         {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
         {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
         {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
