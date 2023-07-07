@@ -130,6 +130,7 @@ const FormEditProject = () => {
       window.location.href = `/project/${id}`
     } catch (error) {
       setLoading(false)
+      console.log(loading)
       console.log('Error:', error)
     }
   }
