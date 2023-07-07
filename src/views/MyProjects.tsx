@@ -11,46 +11,24 @@ const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
 }
 
-const Dashboard = () => {
-
-interface Project {
-  bank_account: string;
-  category: string;
-  created_at: string;
-  current_amount: number;
-  description: string;
-  end_date: string;
-  goal_amount: number;
-  id: number;
-  image: string;
-  location: string;
-  minimum_donation: number;
-  name_project: string;
-  state_project: string;
-  type_project: string;
-  updated_at: string;
-  user_id: number;
-}
-
+const MyProjects = () => {
   const [loading, setLoading] = useState<boolean>(true)
-  const [sliderVisible, setSliderVisible] = useState<boolean>(false)
-  const [projects, setProjects] = useState<Project[]>([])
+  const [projects, setProjects] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
-  const [maxPrice, setMaxPrice] = useState<number>(0)
-  const [priceRange, setPriceRange] = useState<number[]>([0, 0])
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(apiUrl + '/projects/')
+      const response = await fetch(apiUrl + '/users/'+ user.id +'/projects/',{
+        headers: {
+            Authorization: user.token,
+          },
+          method: 'GET',
+      })
       if (response.status !== 200) {
         throw new Error('Error')
       }
       const data = await response.json()
       setProjects(data)
-      const maxPrice = Math.max(...data.map((project: Project) => project.goal_amount))
-      setPriceRange([0, maxPrice])
-      setMaxPrice(maxPrice)
-      setSliderVisible(true)
     } catch (error) {
       message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
@@ -59,13 +37,28 @@ interface Project {
   }
 
   useEffect(() => {
-    fetchProjects()
     const user = localStorage.getItem('user')
     if (user) {
       setUser(JSON.parse(user))
     }
   }, [])
 
+  useEffect(() => {
+    if (user) {
+        fetchProjects()
+      }
+    }, [user])
+
+    const handleClick = (id: number) => {
+      window.location.href = '/edit/' + id
+    }
+
+  const minPrice =
+    projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
+  const maxPrice =
+    projects.length > 0 ? Math.max(...projects.map((project) => project.goal_amount)) : 1000
+
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice])
   const [filteredPriceRange, setFilteredPriceRange] = useState([0, 0])
   const [searchText, setSearchText] = useState('')
   const [minDonationRequired, setMinDonationRequired] = useState(0)
@@ -94,8 +87,8 @@ interface Project {
     <div>
       <ViewContainer>
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
-        {!user && <BigText>Bienvenido a FundingMe</BigText>}
-        <BoldText>¡Explora estos proyectos y aporta para llevarlos a cabo! 🌱</BoldText>
+        {!user && <BigText>Estos son tus proyectos</BigText>}
+        <BoldText>¡Aqui podrás revisar y editar tus proyectos! 🌱</BoldText>
         {loading && (
           <LoadingContainer>
             <Spin size="large">
@@ -107,20 +100,27 @@ interface Project {
           <DashboardContainer>
             <ProjectsContainer>
               {filteredProjects.map((project, index) => (
-                <ProjectCard
-                  collectedAmount={project.current_amount}
-                  description={project.description}
-                  goalAmount={project.goal_amount}
-                  id={project.id}
-                  image={
-                    project.image
-                      ? project.image
-                      : 'https://source.unsplash.com/800x600/?' + project.name_project
-                  }
-                  index={index}
+                <div>
+                  <ProjectCard
+                    collectedAmount={project.current_amount}
+                    description={project.description}
+                    goalAmount={project.goal_amount}
+                    id={project.id}
+                    image={
+                      project.image
+                        ? project.image
+                        : 'https://source.unsplash.com/800x600/?' + project.name_project
+                    }
+                    index={index}
+                    key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
+                    name={project.name_project}
+                  />
+                  <Button onClick={() => handleClick(project.id)}
                   key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
-                  name={project.name_project}
-                />
+                  >
+                    Editar
+                  </Button>
+                </div>
               ))}
               {filteredProjects.length === 0 && (
                 <BoldText2>No se encontraron proyectos con los filtros realizados 😢</BoldText2>
@@ -147,15 +147,13 @@ interface Project {
                 placeholder="Donación mínima requerida"
               />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
-              {sliderVisible &&
               <Slider
-                defaultValue={[priceRange[0], priceRange[1]]}
+                defaultValue={[minPrice, maxPrice]}
                 max={maxPrice}
                 min={0}
                 onChange={(value) => setPriceRange(value)}
                 range
               />
-              }
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
               </text>
@@ -299,4 +297,4 @@ export const StyledLink = styled(Link)`
   }
 `
 
-export default Dashboard
+export default MyProjects
