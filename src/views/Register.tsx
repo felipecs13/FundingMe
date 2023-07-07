@@ -3,7 +3,6 @@ import { Form, message } from 'antd'
 import { useState } from 'react'
 import {
   Footer,
-  StyledLink,
   StyledButton,
   StyledInput,
   StyledPassword,
@@ -13,7 +12,6 @@ import {
 } from './Login'
 import { Spin } from 'antd'
 import { LoadingContainer } from './Dashboard'
-import { BrowserRouter } from 'react-router-dom'
 import { rutFormatter } from '../helpers/formatters'
 
 const Register = () => {
@@ -27,6 +25,10 @@ const Register = () => {
     } else {
       return Promise.resolve()
     }
+  }
+
+  const handleLinkToLogin = () => {
+    window.location.href = '/login'
   }
 
   const onFinish = async (values: {
@@ -183,7 +185,7 @@ const Register = () => {
           </Form>
           <Footer>
             <div>¿Ya tienes una cuenta? </div>
-            <StyledLink to={'/login'}>Ingresa aquí</StyledLink>
+            <button onClick={handleLinkToLogin}>Ingresa aquí</button>
           </Footer>
         </FormContainer>
       )}
