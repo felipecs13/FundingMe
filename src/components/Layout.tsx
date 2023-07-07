@@ -50,6 +50,7 @@ const Layout = () => {
         {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
         {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
         {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
+        {user && <StyledLink to={'/admin'}>Administrador</StyledLink>}
         {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
       </ContainerLinks>
     </Wrapper>
