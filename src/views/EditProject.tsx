@@ -82,7 +82,6 @@ const FormEditProject = () => {
       category: project.category,
       bank_account: project.bank_account,
       type_project: project.type_project,
-      image: project.image,
     })
   }, [project])
 
@@ -100,9 +99,9 @@ const FormEditProject = () => {
     end_date: string
     category: string
   }) => {
-    console.log('Success:', values)
     setLoading(true)
     try {
+      console.log(values)
       const photo = values.image?.fileList[0].originFileObj
       const formData = new FormData()
       formData.append('project[image]', photo)
@@ -117,9 +116,10 @@ const FormEditProject = () => {
       formData.append('project[category]', values.category)
 
       const data = await fetch(`${apiUrl}/projects/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           Authorization: user.token,
+          cors: 'cors',
         },
         body: formData,
       })
@@ -128,7 +128,7 @@ const FormEditProject = () => {
         throw new Error('Error')
       }
       // Redirect to home
-      window.location.href = `/projects/${id}`
+      window.location.href = `/project/${id}`
     } catch (error) {
       setLoading(false)
       console.log(loading)
@@ -147,7 +147,6 @@ const FormEditProject = () => {
       category: project.category,
       bank_account: project.bank_account,
       type_project: project.type_project,
-      image: project.image,
     })
   }
 
