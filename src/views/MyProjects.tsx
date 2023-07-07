@@ -50,7 +50,7 @@ const MyProjects = () => {
     }, [user])
 
     const handleClick = (id: number) => {
-      window.location.href = '/projects/edit/' + id
+      window.location.href = '/edit/' + id
     }
 
   const minPrice =
@@ -115,7 +115,11 @@ const MyProjects = () => {
                     key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                     name={project.name_project}
                   />
-                  <Button onClick={() => handleClick(project.id)}>Editar</Button>
+                  <Button onClick={() => handleClick(project.id)}
+                  key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
+                  >
+                    Editar
+                  </Button>
                 </div>
               ))}
               {filteredProjects.length === 0 && (
