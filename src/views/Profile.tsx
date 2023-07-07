@@ -7,24 +7,11 @@ import { BigText } from './Login'
 import { colors } from '../styles/constants'
 import NoImg from '../assets/no_image.jpg'
 import { message } from 'antd'
-
-interface IUser {
-  image: string
-  name: string
-  email: string
-  rut: string
-  bankAccount: string
-}
+import { IProfile } from '../helpers/interfaces'
 
 const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true)
-  const [dataUser, setDataUser] = useState<IUser>({
-    image: '',
-    name: '',
-    email: '',
-    rut: '',
-    bankAccount: '',
-  })
+  const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
 
   const getUserData = async (id: number, token: string) => {
     try {

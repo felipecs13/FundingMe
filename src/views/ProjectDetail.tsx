@@ -7,20 +7,16 @@ import { motion } from 'framer-motion'
 import { message, Spin, Input, Button, Space } from 'antd'
 import { LoadingContainer } from './Dashboard'
 import { AppstoreOutlined, MessageOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons'
+import { IProject, IUser } from '../helpers/interfaces'
 
-interface Project {
-  name_project: string
-  description: string
-  image: string
-  goal_amount: number
-  current_amount: number
-  owner: string
-  category: string
-  location: string
-  created_at: string
-  end_date: string
-  minimum_donation: number
+const categorias = {
+  EDUCATION: 'Educación',
+  HEALTH: 'Salud',
+  ENVIRONMENT: 'Medio Ambiente',
+  SOCIAL: 'Social',
 }
+
+type CategoryKey = keyof typeof categorias
 
 const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
@@ -44,9 +40,10 @@ const calculateDateDiffIntoString = (date: string, endDate: string) => {
 }
 
 const ProjectDetail = () => {
-  const [project, setProject] = useState<Project>({} as Project)
+  const [project, setProject] = useState<IProject>({} as IProject)
   const [loading, setLoading] = useState<boolean>(true)
   const { id } = useParams<Record<string, string>>()
+  const [user, setUser] = useState<IUser>({} as IUser)
 
   const fetchProject = async () => {
     try {
@@ -64,12 +61,54 @@ const ProjectDetail = () => {
     }
   }
 
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/comments`)
+      if (response.status !== 200) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const submitComment = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/comments`, {
+        method: 'POST',
+        headers: {
+          Authorization: user.token,
+        },
+        body: JSON.stringify({
+          project_id: id,
+          user_id: user.id,
+          comment_text: 'Muy buena idea!',
+          state: 'default',
+        }),
+      })
+      if (response.status !== 201) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    }
+  }
+
   useEffect(() => {
     setLoading(true)
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
     fetchProject()
+    fetchComments()
   }, [])
-
-
 
   return (
     <InfoContainer>
@@ -81,8 +120,12 @@ const ProjectDetail = () => {
             </Spin>
           </LoadingContainer>
         ) : (
-          <>
-            <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 35 }} transition={{ duration: 0.5 }}>
+          <InfoLeftSide>
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 35 }}
+              transition={{ duration: 0.5 }}
+            >
               <Title>Proyecto: {project.name_project}</Title>
               <div>
                 <ImageWrapper>
@@ -95,88 +138,100 @@ const ProjectDetail = () => {
                     }
                   />
                 </ImageWrapper>
-                <SmallText>Publicado {dateToLocale(project.created_at)} - Finaliza {dateToLocale(project.end_date)}</SmallText>
+                <SmallText>
+                  Publicado {dateToLocale(project.created_at)} - Finaliza{' '}
+                  {dateToLocale(project.end_date)}
+                </SmallText>
                 <DescriptionText>{project.description}</DescriptionText>
-                <Space.Compact style={{width : "100%"}}>
-                  <Input size="large" placeholder="Escribe un comentario..." prefix={<MessageOutlined />}/>
-                  <Button type="primary">Enviar</Button>
+                <Space.Compact style={{ width: '100%' }}>
+                  <Input
+                    size="large"
+                    placeholder="Escribe un comentario..."
+                    prefix={<MessageOutlined />}
+                  />
+                  <Button
+                    onClick={submitComment}
+                    onSubmit={submitComment}
+                    type="primary"
+                  >
+                    Enviar
+                  </Button>
                 </Space.Compact>
               </div>
             </motion.div>
-          </>
+          </InfoLeftSide>
         )}
       </InfoLeftSide>
 
-      {!loading &&
-      <InfoRightSide
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 35 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        <CardInfo>
-        <ActionRowContainer>
-          <UserOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>Proyecto creado por: { project.owner }</SpecialText>
-        </ActionRowContainer>
+      {!loading && (
+        <InfoRightSide
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 35 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <CardInfo>
+            <ActionRowContainer>
+              <UserOutlined
+                style={{
+                  fontSize: '40px',
+                  marginRight: '10px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{project.owner}</SpecialText>
+            </ActionRowContainer>
 
-        <ActionRowContainer>
-          <AppstoreOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>Categoría: { project.category }</SpecialText>
-        </ActionRowContainer>
+            <ActionRowContainer>
+              <AppstoreOutlined
+                style={{
+                  fontSize: '40px',
+                  marginRight: '10px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{categorias[project.category as CategoryKey]}</SpecialText>
+            </ActionRowContainer>
 
+            <ActionRowContainer>
+              <PushpinOutlined
+                style={{
+                  fontSize: '40px',
+                  marginRight: '10px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{project.location}</SpecialText>
+            </ActionRowContainer>
+          </CardInfo>
 
-        <ActionRowContainer>
-          <PushpinOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>{project.location}</SpecialText>
-        </ActionRowContainer>
-        </CardInfo>
+          <CardInfo2>
+            <MiniChildCard>
+              <BoldText>{fixNumber(project.goal_amount)} de objetivo</BoldText>
+            </MiniChildCard>
 
+            <MiniChildCard>
+              <BoldText>{fixNumber(project.current_amount)} recaudados</BoldText>
+            </MiniChildCard>
 
-        <CardInfo2>
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.goal_amount)} de objetivo</BoldText>
-          </MiniChildCard>
+            <MiniChildCard>
+              <BoldText>{fixNumber(project.minimum_donation)} donación mínima</BoldText>
+            </MiniChildCard>
 
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.current_amount)} recaudados</BoldText>
-          </MiniChildCard>
+            <MiniChildCard>
+              <BoldText>
+                {calculateDateDiffIntoString(project.created_at, project.end_date)}
+              </BoldText>
+            </MiniChildCard>
 
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.minimum_donation)} donación mínima</BoldText>
-          </MiniChildCard>
-
-          <MiniChildCard>
-            <BoldText>{calculateDateDiffIntoString(project.created_at, project.end_date)}</BoldText>
-          </MiniChildCard>
-
-          <DonateButton
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Donar
-          </DonateButton>
-
-        </CardInfo2>
-      </InfoRightSide>
-      }
+            <DonateButton
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Donar
+            </DonateButton>
+          </CardInfo2>
+        </InfoRightSide>
+      )}
     </InfoContainer>
   )
 }
@@ -319,6 +374,5 @@ const DonateButton = styled(motion.div)`
   margin-top: 20px;
   margin-bottom: 20px;
 `
-
 
 export default ProjectDetail

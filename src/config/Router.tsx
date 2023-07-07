@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import NotFound from '../components/NotFound'
 import FormProject from '../views/NewProject'
 import Login from '../views/Login'
@@ -18,7 +18,7 @@ const Router = () => {
       element: <Layout />,
       errorElement: <NotFound />,
       children: [
-        {index: true, element: <Dashboard />},
+        { index: true, element: <Dashboard /> },
         {
           path: 'new',
           element: <FormProject />,
@@ -35,21 +35,29 @@ const Router = () => {
           errorElement: <NotFound />,
         },
         {
-
           path: 'admin',
           element: <AdminTable />,
           errorElement: <NotFound />,
         },
         {
           path: 'my-projects',
-          element: <MyProjects/>,
+          element: <MyProjects />,
           errorElement: <NotFound />,
         },
         {
           path: 'edit/:id',
           element: <FormEditProject />,
           errorElement: <NotFound />,
-        }
+        },
+        {
+          element: (
+            <Navigate
+              replace
+              to="/"
+            />
+          ),
+          path: '*',
+        },
       ],
     },
     {
