@@ -12,9 +12,32 @@ const fixNumber = (number: number) => {
 }
 
 const Dashboard = () => {
+
+interface Project {
+  bank_account: string;
+  category: string;
+  created_at: string;
+  current_amount: number;
+  description: string;
+  end_date: string;
+  goal_amount: number;
+  id: number;
+  image: string;
+  location: string;
+  minimum_donation: number;
+  name_project: string;
+  state_project: string;
+  type_project: string;
+  updated_at: string;
+  user_id: number;
+}
+
   const [loading, setLoading] = useState<boolean>(true)
-  const [projects, setProjects] = useState<any[]>([])
+  const [sliderVisible, setSliderVisible] = useState<boolean>(false)
+  const [projects, setProjects] = useState<Project[]>([])
   const [user, setUser] = useState<any>(null)
+  const [maxPrice, setMaxPrice] = useState<number>(0)
+  const [priceRange, setPriceRange] = useState<number[]>([0, 0])
 
   const fetchProjects = async () => {
     try {
@@ -24,6 +47,10 @@ const Dashboard = () => {
       }
       const data = await response.json()
       setProjects(data)
+      const maxPrice = Math.max(...data.map((project: Project) => project.goal_amount))
+      setPriceRange([0, maxPrice])
+      setMaxPrice(maxPrice)
+      setSliderVisible(true)
     } catch (error) {
       message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
@@ -39,12 +66,6 @@ const Dashboard = () => {
     }
   }, [])
 
-  const minPrice =
-    projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
-  const maxPrice =
-    projects.length > 0 ? Math.max(...projects.map((project) => project.goal_amount)) : 1000
-
-  const [priceRange, setPriceRange] = useState([minPrice, maxPrice])
   const [filteredPriceRange, setFilteredPriceRange] = useState([0, 0])
   const [searchText, setSearchText] = useState('')
   const [minDonationRequired, setMinDonationRequired] = useState(0)
@@ -126,13 +147,15 @@ const Dashboard = () => {
                 placeholder="Donación mínima requerida"
               />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
+              {sliderVisible &&
               <Slider
-                defaultValue={[minPrice, maxPrice]}
+                defaultValue={[priceRange[0], priceRange[1]]}
                 max={maxPrice}
                 min={0}
                 onChange={(value) => setPriceRange(value)}
                 range
               />
+              }
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
               </text>
