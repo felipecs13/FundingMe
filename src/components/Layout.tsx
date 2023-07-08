@@ -31,32 +31,31 @@ const Layout = () => {
 
   return (
     <>
-    <Wrapper>
-      <Logo
-        onClick={goToHome}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <Img
-          alt="Logo"
-          src={LogoImg}
-        />
-        <BoldText>FundingMe</BoldText>
-      </Logo>
-      <ContainerLinks>
-        <StyledLink to={'/'}>Inicio</StyledLink>
-        {user && <StyledLink to={'/me'}>Mi perfil</StyledLink>}
-        {user && <StyledLink to={'my-projects'}>Mis proyectos</StyledLink>}
-        {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
-        {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
-        {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
-        {user && <StyledLink to={'/admin'}>Administrador</StyledLink>}
-        {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
-      </ContainerLinks>
-    </Wrapper>
-    <Outlet />
+      <Wrapper>
+        <Logo
+          onClick={goToHome}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Img
+            alt="Logo"
+            src={LogoImg}
+          />
+          <BoldText>FundingMe</BoldText>
+        </Logo>
+        <ContainerLinks>
+          <StyledLink to={'/'}>Inicio</StyledLink>
+          {user && <StyledLink to={'/me'}>Mi perfil</StyledLink>}
+          {user && <StyledLink to={'my-projects'}>Mis proyectos</StyledLink>}
+          {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
+          {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
+          {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
+          {user && <StyledLink to={'/admin'}>Administrador</StyledLink>}
+          {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
+        </ContainerLinks>
+      </Wrapper>
+      <Outlet />
     </>
-    
   )
 }
 
