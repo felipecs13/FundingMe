@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Title } from './Profile'
 import { motion } from 'framer-motion'
-import { message, Spin, Input, Button } from 'antd'
+import { message, Spin, Input, Button, Modal, Form } from 'antd'
 import { LoadingContainer } from './Dashboard'
 import {
   AppstoreOutlined,
@@ -13,7 +13,19 @@ import {
   UserOutlined,
   CalendarOutlined,
 } from '@ant-design/icons'
+
+import {
+  StyledInput,
+  Item,
+} from './Login'
+
+import {
+  StyledInputNumber
+} from './NewProject'
+
 import { IProject, IUser } from '../helpers/interfaces'
+import Cards from 'react-credit-cards-2'
+import 'react-credit-cards-2/dist/es/styles-compiled.css'
 
 const categorias = {
   EDUCATION: 'Educación',
@@ -25,7 +37,8 @@ const categorias = {
 type CategoryKey = keyof typeof categorias
 
 const fixNumber = (number: number) => {
-  return '$' + Number(number).toLocaleString('es-AR')
+  // Convertir a string el número y agregarle puntos cada 3 dígitos
+  return '$' + Number(number).toLocaleString()
 }
 
 const dateToLocale = (date: string) => {
@@ -42,8 +55,20 @@ const calculateDateDiffIntoString = (date: string, endDate: string) => {
 }
 
 const ProjectDetail = () => {
+  const [form] = Form.useForm()
   const [project, setProject] = useState<IProject>({} as IProject)
   const [loading, setLoading] = useState<boolean>(true)
+  const [loadingPayment, setLoadingPayment] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [donationAmount, setDonationAmount] = useState<number>(0)
+  const [paymentStep, setPaymentStep] = useState<boolean>(false)
+  const [cardNumber, setCardNumber] = useState<string>('')
+  const [cardName, setCardName] = useState<string>('')
+  const [cardExpiry, setCardExpiry] = useState<string>('')
+  const [cardCvc, setCardCvc] = useState<string>('')
+
+  type Focused = "name" | "number" | "expiry" | "cvc" | "";
+  const [cardFocus, setCardFocus] = useState<Focused>('')
   const { id } = useParams<Record<string, string>>()
   const [user, setUser] = useState<IUser>({} as IUser)
 
@@ -104,6 +129,70 @@ const ProjectDetail = () => {
     }
   }
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    if (!paymentStep) {
+      setPaymentStep(true)
+    } else {
+      handlePayment()
+    }
+  };
+
+  const handleCancel = () => {
+    if (paymentStep) {
+      return setPaymentStep(false)
+    }
+    setCardNumber('')
+    setCardName('')
+    setCardExpiry('')
+    setCardCvc('')
+    setCardFocus('')
+    setDonationAmount(0)
+    form.resetFields()
+    setIsModalOpen(false);
+  };
+
+  const handlePayment = async () => {
+    setLoadingPayment(true)
+    setCardFocus('')
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    // Return error with a 20% chance
+    if (Math.random() < 0.2) {
+      message.error('Hubo un error al realizar el pago, intente nuevamente.')
+      return setLoadingPayment(false)
+    }
+    try {
+      const response = await fetch(`${apiUrl}/donations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: user.token,
+        },
+        body: JSON.stringify({
+            "donation": {
+                "user_id": user.id,
+                "project_id": id,
+                "amount" : donationAmount
+            }
+        }),
+      })
+      if (response.status !== 201) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      console.log(data)
+      message.success('Donación realizada con éxito!')
+      handleCancel()
+    } catch (error) {
+      message.error('Hubo un error al realizar el pago, intente nuevamente.')
+    } finally {
+      setLoadingPayment(false)
+    }
+  }
+
   useEffect(() => {
     setLoading(true)
     const storedUser = localStorage.getItem('user')
@@ -122,6 +211,175 @@ const ProjectDetail = () => {
     </LoadingContainer>
   ) : (
     <InfoContainer>
+      <Modal
+        title=" "
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText={paymentStep ? 'Donar ' + fixNumber(donationAmount) + ' CLP'  : 'Continuar'}
+        cancelText={paymentStep ? 'Volver' : 'Cancelar'}
+        okButtonProps={{
+          disabled:
+            loadingPayment ||
+            donationAmount < project.minimum_donation ||
+            (paymentStep && (!cardNumber || !cardName || !cardExpiry || !cardCvc)) ||
+            (paymentStep && cardNumber.length != 16) ||
+            (paymentStep && cardName.length < 3) ||
+            (paymentStep && cardExpiry.length < 4) ||
+            (paymentStep && cardCvc.length != 3),
+
+        }}
+        cancelButtonProps={{ disabled: loadingPayment }}
+      >
+        {!paymentStep &&
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <SpecialText>Ingresa el monto de tu donación 💰</SpecialText>
+
+          <p>
+            Con tu donación estarás apoyando a {project.owner} en su proyecto "{project.name_project}". Una vez se llegue a la meta, los administradores de FundingMe se encargarán de hacer llegar tu donación a {project.owner}. Si es que no se alcanza la meta, tu dinero será devuelto.
+          </p>
+
+          <GreenText>
+            El monto mínimo es de {fixNumber(project.minimum_donation)} CLP
+          </GreenText>
+
+          <StyledInputNumber
+            value={donationAmount}
+            step={1}
+            placeholder="$ 1.234 CLP"
+            precision={0}
+            onChange={(value:any) => setDonationAmount(value)}
+          />
+        </motion.div>
+        }
+        {paymentStep &&
+        <motion.div id = "PaymentForm"
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Cards
+            number={cardNumber}
+            name={cardName}
+            expiry={cardExpiry}
+            cvc={cardCvc}
+            focused={cardFocus}
+          />
+
+          {loadingPayment ? (
+          <LoadingContainer>
+            <Spin size="large">
+              <div className="content" />
+            </Spin>
+          </LoadingContainer>
+          ) : (
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={() => console.log('Finish')}
+            requiredMark={false}
+          >
+            <Item
+              label="Nombre"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Debe ingresar su nombre',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="Nombre Apellido"
+                type="text"
+                onChange={(e) => setCardName(e.target.value)}
+                onFocus={() => setCardFocus("name")}
+              />
+            </Item>
+            <Item
+              label="Número de tarjeta"
+              name="cardNumber"
+              rules={[
+                {
+                  required: true,
+                  message: 'Debe ingresar un número de tarjeta',
+                },
+                {
+                  pattern: /^[0-9]*$/gm,
+                  message: 'El número de tarjeta debe contener solo números',
+                },
+                () => ({
+                  validator(_, value) {
+                    if (value.replace(/ /g, '').length === 16) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(new Error('El número de tarjeta debe tener 16 dígitos'))
+                  },
+                }),
+              ]}
+            >
+              <StyledInput
+                value={cardNumber}
+                placeholder="1234 1234 1234 1234"
+                type="text"
+                onChange={(e) => setCardNumber(e.target.value)}
+                onFocus={() => setCardFocus("number")}
+              />
+            </Item>
+            <Item
+              label="Vencimiento"
+              name="cardExpiry"
+              rules={[
+                {
+                  required: true,
+                  message: 'Debe ingresar una contraseña',
+                },
+              ]}
+            >
+              <StyledInput
+                placeholder="MM/AA"
+                type="text"
+                onChange={(e) =>
+                  setCardExpiry(e.target.value)
+                }
+                onFocus={() => setCardFocus("expiry")}
+              />
+            </Item>
+            <Item
+              label="CVC"
+              name="cardCvc"
+              rules={[
+                {
+                  required: true,
+                  message: 'Debes ingresar los 3 dígitos del reverso de tu tarjeta',
+                },
+                () => ({
+                  validator(_, value) {
+                    if (value.replace(/ /g, '').length === 3) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(new Error('El CVC debe tener 3 dígitos'))
+                  },
+                }),
+              ]}
+            >
+              <StyledInput
+                placeholder="123"
+                type="text"
+                onChange={(e) => setCardCvc(e.target.value)}
+                onFocus={() => setCardFocus("cvc")}
+              />
+            </Item>
+          </Form>
+          )}
+        </motion.div>
+        }
+      </Modal>
+
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 35 }}
@@ -260,6 +518,7 @@ const ProjectDetail = () => {
               <DonateButton
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={showModal}
               >
                 Donar
               </DonateButton>

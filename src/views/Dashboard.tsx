@@ -27,7 +27,8 @@ const Dashboard = () => {
         throw new Error('Error')
       }
       const data = await response.json()
-      setProjects(data)
+      // Filter projects with PENDING state_project
+      setProjects(data.filter((project: IDataProject) => project.state_project != 'PENDING'))
       const maxPrice = Math.max(...data.map((project: IDataProject) => project.goal_amount))
       setPriceRange([0, maxPrice])
       setMaxPrice(maxPrice)
