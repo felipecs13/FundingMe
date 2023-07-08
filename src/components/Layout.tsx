@@ -54,10 +54,17 @@ const Layout = () => {
           {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
         </ContainerLinks>
       </Wrapper>
-      <Outlet />
+      <ChildrenContainer>
+        <Outlet />
+      </ChildrenContainer>
     </>
   )
 }
+
+const ChildrenContainer = styled.div`
+  overflow-y: auto;
+  max-height: calc(100vh - 70px);
+`
 
 const Wrapper = styled.div`
   display: flex;

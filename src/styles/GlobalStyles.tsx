@@ -14,18 +14,19 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
   ::-webkit-scrollbar {
     width: 10px;
-    background: ${colors.scrollbarTrack};
+    background: ${colors.background};
   }
   ::-webkit-scrollbar-track {
-    background: ${colors.scrollbarTrack};
+    background: ${colors.background};
     border-radius: 5px;
     margin: 5px 0px;
   }
   ::-webkit-scrollbar-thumb {
-    background: ${colors.scrollbarThumb};
+    background: ${colors.primary};
     border-radius: 5px;
   }
 

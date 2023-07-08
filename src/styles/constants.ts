@@ -3,8 +3,6 @@ export const colors = {
   primary: '#379f7a',
   secondary: '#7ab317',
   fontColor: '#303236',
-  scrollbarTrack: '#b7b7b7',
-  scrollbarThumb: '#7ab317',
 }
 
 export const fonts = {
