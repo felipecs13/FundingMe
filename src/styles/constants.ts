@@ -3,6 +3,7 @@ export const colors = {
   primary: '#379f7a',
   secondary: '#7ab317',
   fontColor: '#303236',
+  backgroundCard: '#f5f5f5',
 }
 
 export const fonts = {

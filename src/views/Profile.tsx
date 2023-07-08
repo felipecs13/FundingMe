@@ -99,7 +99,7 @@ export const Card = styled.div`
   padding: 1.5rem;
   color: ${colors.fontColor};
   font-size: 14px;
-  background-color: white;
+  background-color: ${colors.backgroundCard};
 `
 
 const FieldInfo = styled.div`

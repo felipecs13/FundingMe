@@ -210,7 +210,7 @@ export const FiltersContainer = styled(motion.div)`
     text-align: center;
     margin-bottom: 20px;
   }
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 `

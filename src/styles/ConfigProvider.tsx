@@ -15,6 +15,15 @@ const ConfigProviderAntd = ({ children }: IConfigProvider) => (
         fontFamily: fonts.primary,
         colorTextBase: colors.fontColor,
       },
+      components: {
+        Table: {
+          colorBgContainer: 'transparent',
+          fontSize: 15,
+          colorFillAlter: 'transparent',
+          colorBorderSecondary: 'black',
+          lineWidth: 1,
+        },
+      },
     }}
   >
     {children}

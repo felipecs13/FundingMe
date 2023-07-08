@@ -80,7 +80,7 @@ const Wrapper = styled.div`
     margin-bottom: 10px;
   }
   cursor: pointer;
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
 
 `
 

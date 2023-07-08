@@ -409,6 +409,7 @@ const Card = styled(BaseCard)`
   max-width: 100%;
   width: 1200px;
   align-items: center;
+  background-color: ${colors.backgroundCard};
 `
 
 const FormGrid = styled.div`

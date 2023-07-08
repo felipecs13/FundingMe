@@ -19,7 +19,7 @@ const categorias = {
   EDUCATION: 'Educación',
   HEALTH: 'Salud',
   ENVIRONMENT: 'Medio Ambiente',
-  SOCIAL: 'Social',
+  ANIMALS: 'Animales',
 }
 
 type CategoryKey = keyof typeof categorias
@@ -277,6 +277,7 @@ const ImageWrapper = styled.div`
 
   img {
     max-height: 400px;
+    max-width: 100%;
   }
 `
 
@@ -301,7 +302,7 @@ const ProjectInfo = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
   border-radius: 10px;
   padding: 1.5rem;
   gap: 20px;
@@ -344,7 +345,7 @@ const DonationInfo = styled.div`
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
   justify-content: space-around;
   padding: 1.5rem;
 `
