@@ -37,8 +37,13 @@ const categorias = {
 type CategoryKey = keyof typeof categorias
 
 const fixNumber = (number: number) => {
-  // Convertir a string el número y agregarle puntos cada 3 dígitos
-  return '$' + Number(number).toLocaleString()
+  // Convertir a string el número
+  let numStr = number.toString();
+
+  // Agregar puntos cada 3 dígitos usando regex
+  numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  return '$' + numStr;
 }
 
 const dateToLocale = (date: string) => {
@@ -160,7 +165,7 @@ const ProjectDetail = () => {
     setCardFocus('')
     await new Promise(resolve => setTimeout(resolve, 3000))
     // Return error with a 20% chance
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.4) {
       message.error('Hubo un error al realizar el pago, intente nuevamente.')
       return setLoadingPayment(false)
     }
@@ -186,6 +191,14 @@ const ProjectDetail = () => {
       console.log(data)
       message.success('Donación realizada con éxito!')
       handleCancel()
+      setCardNumber('')
+      setCardName('')
+      setCardExpiry('')
+      setCardCvc('')
+      setCardFocus('')
+      setDonationAmount(0)
+      form.resetFields()
+      setIsModalOpen(false);
     } catch (error) {
       message.error('Hubo un error al realizar el pago, intente nuevamente.')
     } finally {
