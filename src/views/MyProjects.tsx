@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
 import { message } from 'antd'
+import { IUser, IDataProject } from '../helpers/interfaces'
 
 const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
@@ -13,16 +14,16 @@ const fixNumber = (number: number) => {
 
 const MyProjects = () => {
   const [loading, setLoading] = useState<boolean>(true)
-  const [projects, setProjects] = useState<any[]>([])
-  const [user, setUser] = useState<any>(null)
+  const [projects, setProjects] = useState<IDataProject[]>([])
+  const [user, setUser] = useState<IUser>({} as IUser)
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(apiUrl + '/users/'+ user.id +'/projects/',{
+      const response = await fetch(apiUrl + '/users/' + user.id + '/projects/', {
         headers: {
-            Authorization: user.token,
-          },
-          method: 'GET',
+          Authorization: user.token,
+        },
+        method: 'GET',
       })
       if (response.status !== 200) {
         throw new Error('Error')
@@ -45,13 +46,13 @@ const MyProjects = () => {
 
   useEffect(() => {
     if (user) {
-        fetchProjects()
-      }
-    }, [user])
-
-    const handleClick = (id: number) => {
-      window.location.href = '/edit/' + id
+      fetchProjects()
     }
+  }, [user])
+
+  const handleClick = (id: number) => {
+    window.location.href = '/edit/' + id
+  }
 
   const minPrice =
     projects.length > 0 ? Math.min(...projects.map((project) => project.goal_amount)) : 0
@@ -100,7 +101,7 @@ const MyProjects = () => {
           <DashboardContainer>
             <ProjectsContainer>
               {filteredProjects.map((project, index) => (
-                <div>
+                <div key={index}>
                   <ProjectCard
                     collectedAmount={project.current_amount}
                     description={project.description}
@@ -115,8 +116,9 @@ const MyProjects = () => {
                     key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                     name={project.name_project}
                   />
-                  <Button onClick={() => handleClick(project.id)}
-                  key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
+                  <Button
+                    onClick={() => handleClick(project.id)}
+                    key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                   >
                     Editar
                   </Button>
@@ -227,7 +229,7 @@ export const FiltersContainer = styled(motion.div)`
     text-align: center;
     margin-bottom: 20px;
   }
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 `

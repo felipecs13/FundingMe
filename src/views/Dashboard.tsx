@@ -6,36 +6,17 @@ import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
 import { message } from 'antd'
+import { IDataProject, IUser } from '../helpers/interfaces'
 
 const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
 }
 
 const Dashboard = () => {
-
-interface Project {
-  bank_account: string;
-  category: string;
-  created_at: string;
-  current_amount: number;
-  description: string;
-  end_date: string;
-  goal_amount: number;
-  id: number;
-  image: string;
-  location: string;
-  minimum_donation: number;
-  name_project: string;
-  state_project: string;
-  type_project: string;
-  updated_at: string;
-  user_id: number;
-}
-
   const [loading, setLoading] = useState<boolean>(true)
   const [sliderVisible, setSliderVisible] = useState<boolean>(false)
-  const [projects, setProjects] = useState<Project[]>([])
-  const [user, setUser] = useState<any>(null)
+  const [projects, setProjects] = useState<IDataProject[]>([])
+  const [user, setUser] = useState<IUser>({} as IUser)
   const [maxPrice, setMaxPrice] = useState<number>(0)
   const [priceRange, setPriceRange] = useState<number[]>([0, 0])
 
@@ -47,7 +28,7 @@ interface Project {
       }
       const data = await response.json()
       setProjects(data)
-      const maxPrice = Math.max(...data.map((project: Project) => project.goal_amount))
+      const maxPrice = Math.max(...data.map((project: IDataProject) => project.goal_amount))
       setPriceRange([0, maxPrice])
       setMaxPrice(maxPrice)
       setSliderVisible(true)
@@ -147,15 +128,15 @@ interface Project {
                 placeholder="Donación mínima requerida"
               />
               <BoldText2>Filtrar por recaudación requerida 💸</BoldText2>
-              {sliderVisible &&
-              <Slider
-                defaultValue={[priceRange[0], priceRange[1]]}
-                max={maxPrice}
-                min={0}
-                onChange={(value) => setPriceRange(value)}
-                range
-              />
-              }
+              {sliderVisible && (
+                <Slider
+                  defaultValue={[priceRange[0], priceRange[1]]}
+                  max={maxPrice}
+                  min={0}
+                  onChange={(value) => setPriceRange(value)}
+                  range
+                />
+              )}
               <text>
                 {fixNumber(priceRange[0])} - {fixNumber(priceRange[1])}
               </text>
@@ -229,7 +210,7 @@ export const FiltersContainer = styled(motion.div)`
     text-align: center;
     margin-bottom: 20px;
   }
-  background-color: #f5f5f5;
+  background-color: ${colors.backgroundCard};
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 `

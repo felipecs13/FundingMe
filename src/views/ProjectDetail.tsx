@@ -4,23 +4,25 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Title } from './Profile'
 import { motion } from 'framer-motion'
-import { message, Spin, Input, Button, Space } from 'antd'
+import { message, Spin, Input, Button } from 'antd'
 import { LoadingContainer } from './Dashboard'
-import { AppstoreOutlined, MessageOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  AppstoreOutlined,
+  MessageOutlined,
+  PushpinOutlined,
+  UserOutlined,
+  CalendarOutlined,
+} from '@ant-design/icons'
+import { IProject, IUser } from '../helpers/interfaces'
 
-interface Project {
-  name_project: string
-  description: string
-  image: string
-  goal_amount: number
-  current_amount: number
-  owner: string
-  category: string
-  location: string
-  created_at: string
-  end_date: string
-  minimum_donation: number
+const categorias = {
+  EDUCATION: 'Educación',
+  HEALTH: 'Salud',
+  ENVIRONMENT: 'Medio Ambiente',
+  ANIMALS: 'Animales',
 }
+
+type CategoryKey = keyof typeof categorias
 
 const fixNumber = (number: number) => {
   return '$' + Number(number).toLocaleString('es-AR')
@@ -36,17 +38,16 @@ const calculateDateDiffIntoString = (date: string, endDate: string) => {
   const diffTime = Math.abs(date2.getTime() - date1.getTime())
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  if (diffDays < 1) {
-    return 'Finaliza hoy ⌛'
-  }
-
-  return 'Quedan ' + diffDays + ' días 🗓️'
+  return diffDays
 }
 
 const ProjectDetail = () => {
-  const [project, setProject] = useState<Project>({} as Project)
+  const [project, setProject] = useState<IProject>({} as IProject)
   const [loading, setLoading] = useState<boolean>(true)
   const { id } = useParams<Record<string, string>>()
+  const [user, setUser] = useState<IUser>({} as IUser)
+
+  const diffDays = calculateDateDiffIntoString(project.created_at, project.end_date)
 
   const fetchProject = async () => {
     try {
@@ -64,242 +65,335 @@ const ProjectDetail = () => {
     }
   }
 
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/comments`)
+      if (response.status !== 200) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const submitComment = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/comments`, {
+        method: 'POST',
+        headers: {
+          Authorization: user.token,
+        },
+        body: JSON.stringify({
+          project_id: id,
+          user_id: user.id,
+          comment_text: 'Muy buena idea!',
+          state: 'default',
+        }),
+      })
+      if (response.status !== 201) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    }
+  }
+
   useEffect(() => {
     setLoading(true)
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
     fetchProject()
+    fetchComments()
   }, [])
 
-
-
-  return (
+  return loading ? (
+    <LoadingContainer>
+      <Spin size="large">
+        <div className="content" />
+      </Spin>
+    </LoadingContainer>
+  ) : (
     <InfoContainer>
-      <InfoLeftSide>
-        {loading ? (
-          <LoadingContainer>
-            <Spin size="large">
-              <div className="content" />
-            </Spin>
-          </LoadingContainer>
-        ) : (
-          <>
-            <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 35 }} transition={{ duration: 0.5 }}>
-              <Title>Proyecto: {project.name_project}</Title>
-              <div>
-                <ImageWrapper>
-                  <img
-                    alt={project.name_project}
-                    src={
-                      project.image
-                        ? project.image
-                        : 'https://source.unsplash.com/800x600/?' + project.name_project
-                    }
-                  />
-                </ImageWrapper>
-                <SmallText>Publicado {dateToLocale(project.created_at)} - Finaliza {dateToLocale(project.end_date)}</SmallText>
-                <DescriptionText>{project.description}</DescriptionText>
-                <Space.Compact style={{width : "100%"}}>
-                  <Input size="large" placeholder="Escribe un comentario..." prefix={<MessageOutlined />}/>
-                  <Button type="primary">Enviar</Button>
-                </Space.Compact>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </InfoLeftSide>
-
-      {!loading &&
-      <InfoRightSide
+      <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 35 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5 }}
+        style={{ width: '100%' }}
       >
-        <CardInfo>
-        <ActionRowContainer>
-          <UserOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>Proyecto creado por: { project.owner }</SpecialText>
-        </ActionRowContainer>
+        <InfoSide>
+          <ProjectPrincipalInfo>
+            <CustomTitle>{project.name_project}</CustomTitle>
+            <ImageWrapper>
+              <img
+                alt={project.name_project}
+                src={
+                  project.image
+                    ? project.image
+                    : 'https://source.unsplash.com/800x600/?' + project.name_project
+                }
+              />
+            </ImageWrapper>
+            <DescriptionText>{project.description}</DescriptionText>
+          </ProjectPrincipalInfo>
+          <ProjectPrincipalInfo>
+            {/* 
+            if comments are empty,dont show this
+            map de comentarios
+            */}
+            <CommentsContainer>
+              <CommentBox>
+                <GreenText>Juan Pablo dice:</GreenText>
+                <Comment>¡Muy buena idea!</Comment>
+              </CommentBox>
+              <CommentBox>
+                <GreenText>Juan Pablo dice:</GreenText>
+                <Comment>¡Muy buena idea!</Comment>
+              </CommentBox>
+            </CommentsContainer>
+            <WriteComment>
+              <Input
+                size="large"
+                placeholder="Escribe un comentario..."
+                prefix={<MessageOutlined />}
+                onSubmit={submitComment}
+              />
+              <Button
+                onClick={submitComment}
+                type="primary"
+              >
+                Enviar
+              </Button>
+            </WriteComment>
+          </ProjectPrincipalInfo>
+        </InfoSide>
+      </motion.div>
 
-        <ActionRowContainer>
-          <AppstoreOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>Categoría: { project.category }</SpecialText>
-        </ActionRowContainer>
+      {!loading && (
+        <InfoSide
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 35 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <ProjectInfo>
+            <ActionRowContainer>
+              <UserOutlined
+                style={{
+                  fontSize: '40px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{project.owner}</SpecialText>
+            </ActionRowContainer>
 
+            <ActionRowContainer>
+              <AppstoreOutlined
+                style={{
+                  fontSize: '40px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{categorias[project.category as CategoryKey]}</SpecialText>
+            </ActionRowContainer>
 
-        <ActionRowContainer>
-          <PushpinOutlined
-            style={{
-              fontSize: '40px',
-              marginRight: '10px',
-              color: colors.primary,
-            }}
-          />
-          <SpecialText>{project.location}</SpecialText>
-        </ActionRowContainer>
-        </CardInfo>
+            <ActionRowContainer>
+              <PushpinOutlined
+                style={{
+                  fontSize: '40px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>{project.location}</SpecialText>
+            </ActionRowContainer>
 
+            <ActionRowContainer>
+              <CalendarOutlined
+                style={{
+                  fontSize: '40px',
+                  color: colors.primary,
+                }}
+              />
+              <SpecialText>
+                {dateToLocale(project.created_at)} - {dateToLocale(project.end_date)}
+              </SpecialText>
+            </ActionRowContainer>
+          </ProjectInfo>
 
-        <CardInfo2>
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.goal_amount)} de objetivo</BoldText>
-          </MiniChildCard>
-
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.current_amount)} recaudados</BoldText>
-          </MiniChildCard>
-
-          <MiniChildCard>
-            <BoldText>{fixNumber(project.minimum_donation)} donación mínima</BoldText>
-          </MiniChildCard>
-
-          <MiniChildCard>
-            <BoldText>{calculateDateDiffIntoString(project.created_at, project.end_date)}</BoldText>
-          </MiniChildCard>
-
-          <DonateButton
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Donar
-          </DonateButton>
-
-        </CardInfo2>
-      </InfoRightSide>
-      }
+          <DonationInfo>
+            <DonationInfoRow>
+              <RowContent>
+                <BoldText>{fixNumber(project.goal_amount)}</BoldText>
+                <BoldText>de objetivo</BoldText>
+              </RowContent>
+              <RowContent>
+                <BoldText>{fixNumber(project.current_amount)}</BoldText>
+                <BoldText>recaudados</BoldText>
+              </RowContent>
+            </DonationInfoRow>
+            <DonationInfoRow>
+              <RowContent>
+                <BoldText>{fixNumber(project.minimum_donation)}</BoldText>
+                <BoldText>donación mínima</BoldText>
+              </RowContent>
+              <RowContent>
+                {diffDays < 1 ? (
+                  <>
+                    <BoldText>Finaliza</BoldText>
+                    <BoldText>hoy ⌛</BoldText>
+                  </>
+                ) : (
+                  <>
+                    <BoldText>Quedan</BoldText>
+                    <BoldText> {diffDays} días 🗓️ </BoldText>
+                  </>
+                )}
+              </RowContent>
+            </DonationInfoRow>
+            <DonationInfoRow>
+              <DonateButton
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Donar
+              </DonateButton>
+            </DonationInfoRow>
+          </DonationInfo>
+        </InfoSide>
+      )}
     </InfoContainer>
   )
 }
 
 const ImageWrapper = styled.div`
   overflow: hidden;
-  border-radius: 10px;
+  align-self: center;
 
   img {
-    width: 100%;
-    height: 30%;
-    object-fit: cover;
+    max-height: 400px;
+    max-width: 100%;
   }
 `
 
-export const InfoLeftSide = styled(motion.div)`
-  width: 50%;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  padding: 2%;
-`
-
-export const InfoRightSide = styled(motion.div)`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  width: 35%;
-  padding: 2%;
-`
-
-export const InfoContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 1%;
-`
-
-const CardInfo = styled.div`
-  margin-top: 58px;
-  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  width: 100%;
-  padding-bottom: 30px;
+const InfoSide = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
+  gap: 40px;
+  align-items: flex-start;
+  width: 100%;
 `
 
-const CardInfo2 = styled.div`
-  margin-top: 20px;
-  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
+const InfoContainer = styled.div`
+  display: grid;
+  padding: 40px;
+  grid: 1fr / 0.7fr 0.3fr;
+  gap: 40px;
+`
+
+const ProjectInfo = styled.div`
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: #f5f5f5;
-  justify-content: space-around;
-  padding-bottom: 30px;
+  flex-direction: column;
+  background-color: ${colors.backgroundCard};
+  border-radius: 10px;
+  padding: 1.5rem;
+  gap: 20px;
 `
 
-const MiniChildCard = styled.div`
+const ProjectPrincipalInfo = styled(ProjectInfo)`
+  padding: 2rem;
+  gap: 30px;
+`
+
+const CommentsContainer = styled.div`
+  max-height: 400px;
+  // agregar scrollbar style
   display: flex;
+  flex-direction: column;
+  gap: 15px;
+`
+
+const CommentBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`
+
+const Comment = styled.div`
+  font-size: 14px;
+  margin-left: 15px;
+`
+
+const GreenText = styled.div`
+  color: ${colors.primary};
+  font-weight: 500;
+  font-size: 14px;
+`
+
+const DonationInfo = styled.div`
+  display: grid;
+  grid: 1fr 1fr 1fr / 1fr;
+  width: 100%;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: ${colors.backgroundCard};
+  justify-content: space-around;
+  padding: 1.5rem;
+`
+
+const DonationInfoRow = styled.div`
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
-  width: 150px;
-  height: 60px;
-  margin: 5%;
+  vertical-align: middle;
+  gap: 20px;
+`
+
+const RowContent = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   justify-content: center;
 `
 
 const ActionRowContainer = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 0 20px;
-  margin-top: 30px;
   align-items: center;
   justify-content: flex-start;
   vertical-align: middle;
-  gap: 10px;
+  gap: 20px;
 `
 
-const SpecialText = styled.h2`
-  margin: 0px;
-  font-size: 15px;
-  font-weight: 400;
-  text-align: left;
-  vertical-align: middle;
-  color: ${colors.fontColor};
-`
-
-const BoldText = styled.h2`
-  margin: 0px;
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-  vertical-align: middle;
-  color: ${colors.fontColor};
-`
-
-const SmallText = styled.h2`
-  margin: 5px;
+const SpecialText = styled.div`
   font-size: 17px;
   font-weight: 400;
   text-align: left;
-  vertical-align: middle;
+  color: ${colors.fontColor};
+`
+
+const BoldText = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
   color: ${colors.fontColor};
 `
 
 const DescriptionText = styled.h2`
-  margin: 5px;
-  margin-top: 20px;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 400;
   text-align: left;
-  vertical-align: middle;
-  margin-bottom: 60px;
   color: ${colors.fontColor};
 `
 
@@ -320,5 +414,15 @@ const DonateButton = styled(motion.div)`
   margin-bottom: 20px;
 `
 
+const CustomTitle = styled(Title)`
+  margin: 0 0 0 0;
+`
+
+const WriteComment = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  height: 32px;
+`
 
 export default ProjectDetail

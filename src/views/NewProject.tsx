@@ -15,19 +15,12 @@ import { colors, apiUrl } from '../styles/constants'
 import { Card as BaseCard } from './Profile'
 import { StyledInput, Item, StyledButton } from './Login'
 import { formatterNumber, parserNumber } from '../helpers/formatters'
-
-interface User {
-  token: string
-  id: number
-  email: string
-  rut: string
-  name: string
-}
+import { IUser } from '../helpers/interfaces'
 
 const FormProject = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
-  const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '' })
+  const [user, setUser] = useState<IUser>({ token: '', id: 0, email: '', rut: '', name: '' })
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -71,7 +64,6 @@ const FormProject = () => {
         },
         body: formData,
       })
-      console.log(data)
       if (data.status != 201) {
         throw new Error('Error')
       }
@@ -111,7 +103,7 @@ const FormProject = () => {
           >
             <SubText>¡Crea tu proyecto y comienza a recibir donaciones para desarrollarlo!</SubText>
           </motion.div>
-          
+
           <Form
             autoComplete="off"
             form={form}
@@ -321,7 +313,7 @@ const FormProject = () => {
                     />
                   </Item>
                 </motion.div>
-                
+
                 {/* monto de meta */}
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -417,6 +409,7 @@ const Card = styled(BaseCard)`
   max-width: 100%;
   width: 1200px;
   align-items: center;
+  background-color: ${colors.backgroundCard};
 `
 
 const FormGrid = styled.div`
