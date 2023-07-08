@@ -45,12 +45,17 @@ src={image} />
                   Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉
               </p>
             }
-            {percentage > 0 &&
+            {percentage > 10 &&
               <ProgressBar>
                 <Progress percentage={percentage}>
                     <ProgressLabel>{percentage}%</ProgressLabel>
                 </Progress>
               </ProgressBar>
+            }
+            {percentage <= 10 &&
+              <p>
+                  Este proyecto lleva un {percentage}% de su meta, y necesita ${fixNumber(goalAmount - collectedAmount)} pesos más para ser financiado.
+              </p>
             }
         </Content>
         </Wrapper>
