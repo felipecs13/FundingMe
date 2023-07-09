@@ -539,6 +539,7 @@ const ProjectDetail = () => {
               </RowContent>
             </DonationInfoRow>
             <DonationInfoRow>
+              {user.id ? (
               <DonateButton
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
@@ -546,6 +547,16 @@ const ProjectDetail = () => {
               >
                 Donar
               </DonateButton>
+              ) : (
+              <DonateButton
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => window.location.href = '/login'}
+              >
+                Donar
+              </DonateButton>
+              )
+              }
             </DonationInfoRow>
           </DonationInfo>
         </InfoSide>
