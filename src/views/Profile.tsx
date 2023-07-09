@@ -6,11 +6,12 @@ import { Spin } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
 import { message } from 'antd'
-import { IProfile } from '../helpers/interfaces'
+import { IProfile, IUser } from '../helpers/interfaces'
 
 const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
+  const [user, setUser] = useState<IUser>({} as IUser)
 
   const getUserData = async (id: number, token: string) => {
     try {
@@ -24,6 +25,7 @@ const Profile = () => {
         throw new Error('Error')
       }
       const data = await response.json()
+      setUser(data)
       setDataUser({
         image: data.image_url,
         name: data.name,
@@ -46,6 +48,14 @@ const Profile = () => {
       getUserData(parsedUser.id, parsedUser.token)
     }
   }, [])
+
+  if (Object.keys(user).length === 0) { 
+    return (
+      <div>
+        <BigText>Debes iniciar sesión para ver tu perfil</BigText>
+      </div>
+    )
+  }
 
   return (
     <>

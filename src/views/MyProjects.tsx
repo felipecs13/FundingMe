@@ -5,7 +5,6 @@ import { Form, Button, Input, Slider, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import { motion } from 'framer-motion'
-import { message } from 'antd'
 import { IUser, IDataProject } from '../helpers/interfaces'
 
 const fixNumber = (number: number) => {
@@ -25,13 +24,8 @@ const MyProjects = () => {
         },
         method: 'GET',
       })
-      if (response.status !== 200) {
-        throw new Error('Error')
-      }
       const data = await response.json()
       setProjects(data)
-    } catch (error) {
-      message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
       setLoading(false)
     }
@@ -83,6 +77,14 @@ const MyProjects = () => {
         project.description.toLowerCase().includes(filteredSearchText.toLowerCase()))
     )
   })
+
+  if (Object.keys(user).length === 0) { 
+    return (
+      <div>
+        <BigText>Debes iniciar sesión para ver tus proyectos</BigText>
+      </div>
+    )
+  }
 
   return (
     <div>

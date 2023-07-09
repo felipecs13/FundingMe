@@ -79,6 +79,7 @@ const AdminTable = () => {
     }
   }
 
+
   const columns: ColumnsType<AdminTableData> = [
     {
       dataIndex: 'id',

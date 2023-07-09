@@ -23,6 +23,7 @@ interface User {
   email: string
   rut: string
   name: string
+  is_admin: boolean
 }
 
 interface Project {
@@ -37,13 +38,14 @@ interface Project {
   category: string
   type_project: string
   image: any
+  user_id: number
 }
 
 const FormEditProject = () => {
   const [form] = Form.useForm()
   const [project, setProject] = useState<Project>({} as Project)
   const [loading, setLoading] = useState<boolean>(false)
-  const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '' })
+  const [user, setUser] = useState<User>({ token: '', id: 0, email: '', rut: '', name: '', is_admin: false })
   const { id } = useParams<Record<string, string>>()
 
   const fetchProject = async () => {
@@ -100,9 +102,11 @@ const FormEditProject = () => {
     setLoading(true)
     try {
       console.log(values)
-      const photo = values.image?.fileList[0].originFileObj
       const formData = new FormData()
-      formData.append('project[image]', photo)
+      if (values.image) {
+        const photo = values.image?.fileList[0].originFileObj
+        formData.append('project[image]', photo)
+      }
       formData.append('project[name_project]', values.name_project)
       formData.append('project[bank_account]', values.bank_account)
       formData.append('project[description]', values.description)
@@ -148,6 +152,7 @@ const FormEditProject = () => {
   }
 
   return (
+    (user.is_admin || user.id == project.user_id) ? (
     <Wrapper>
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -214,12 +219,6 @@ const FormEditProject = () => {
                   <Item
                     label="Imágen"
                     name="image"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Debe ingresar una imagen para su proyecto',
-                      },
-                    ]}
                   >
                     <StyledUpload
                       beforeUpload={() => {
@@ -463,7 +462,14 @@ const FormEditProject = () => {
         </Card>
       </motion.div>
     </Wrapper>
+  ) : (
+    <Wrapper>
+      <BigText> No tienes permisos para editar este proyecto </BigText>
+    </Wrapper>
+    )
   )
+  
+
 }
 
 export const Wrapper = styled.div`
@@ -576,6 +582,12 @@ const ButtonContainer = styled.div`
 
 const ButtonSubmit = styled(StyledButton)`
   width: 200px;
+`
+
+export const BigText = styled.div`
+  font-size: 30px;
+  font-weight: 500;
+  color: ${colors.fontColor};
 `
 
 export default FormEditProject
