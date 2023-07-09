@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Title } from './Profile'
 import { motion } from 'framer-motion'
-import { message, Spin, Input, Button, Modal, Form } from 'antd'
+import { message, Spin, Input, Button, Modal, Form, Select } from 'antd'
 import { LoadingContainer } from './Dashboard'
 import {
   AppstoreOutlined,
@@ -57,7 +57,11 @@ const calculateDateDiffIntoString = (date: string, endDate: string) => {
   return diffDays
 }
 
-const ProjectDetail = () => {
+interface Props {
+  idProp?: string;
+}
+
+const ProjectDetail = ({ idProp }: Props) => {
   const [form] = Form.useForm()
   const [commentForm] = Form.useForm()
   const [project, setProject] = useState<IProject>({} as IProject)
@@ -70,11 +74,12 @@ const ProjectDetail = () => {
   const [cardNumber, setCardNumber] = useState<string>('')
   const [cardName, setCardName] = useState<string>('')
   const [cardExpiry, setCardExpiry] = useState<string>('')
+  const [cardYearExpiry, setCardYearExpiry] = useState<string>('')
   const [cardCvc, setCardCvc] = useState<string>('')
 
   type Focused = 'name' | 'number' | 'expiry' | 'cvc' | ''
   const [cardFocus, setCardFocus] = useState<Focused>('')
-  const { id } = useParams<Record<string, string>>()
+  const { id } = idProp ? {id : idProp} : useParams<Record<string, string>>()
   const [user, setUser] = useState<IUser>({} as IUser)
 
   const diffDays = calculateDateDiffIntoString(project.created_at, project.end_date)
@@ -240,7 +245,10 @@ const ProjectDetail = () => {
             (paymentStep && (!cardNumber || !cardName || !cardExpiry || !cardCvc)) ||
             (paymentStep && cardNumber.length != 16) ||
             (paymentStep && cardName.length < 3) ||
-            (paymentStep && cardExpiry.length < 4) ||
+            (paymentStep && cardExpiry.length != 2) ||
+            (paymentStep && cardYearExpiry.length != 2) ||
+            (paymentStep && (cardExpiry + cardYearExpiry).length != 4) ||
+            (paymentStep && (parseInt(cardExpiry) < 7 && cardYearExpiry == '23')) ||
             (paymentStep && cardCvc.length != 3),
         }}
         cancelButtonProps={{ disabled: loadingPayment }}
@@ -283,7 +291,7 @@ const ProjectDetail = () => {
             <Cards
               number={cardNumber}
               name={cardName}
-              expiry={cardExpiry}
+              expiry={cardExpiry + cardYearExpiry}
               cvc={cardCvc}
               focused={cardFocus}
             />
@@ -350,23 +358,68 @@ const ProjectDetail = () => {
                     onFocus={() => setCardFocus('number')}
                   />
                 </Item>
-                <Item
-                  label="Vencimiento"
-                  name="cardExpiry"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Debe ingresar una contraseña',
-                    },
-                  ]}
-                >
-                  <StyledInput
-                    placeholder="MM/AA"
-                    type="text"
-                    onChange={(e) => setCardExpiry(e.target.value)}
-                    onFocus={() => setCardFocus('expiry')}
-                  />
-                </Item>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Item
+                    label="Mes de expiración"
+                    name="cardExpiry"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe ingresar el mes de expiración de la tarjeta',
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="MM"
+                      onChange={(value) => setCardExpiry(value)}
+                      onFocus={() => setCardFocus('expiry')}
+                      style={{ width: '90%' }}
+                      options={[
+                        { value: '01', label: '01' },
+                        { value: '02', label: '02' },
+                        { value: '03', label: '03' },
+                        { value: '04', label: '04' },
+                        { value: '05', label: '05' },
+                        { value: '06', label: '06' },
+                        { value: '07', label: '07' },
+                        { value: '08', label: '08' },
+                        { value: '09', label: '09' },
+                        { value: '10', label: '10' },
+                        { value: '11', label: '11' },
+                        { value: '12', label: '12' },
+                      ]}
+                    />
+                  </Item>
+                  <Item
+                    label="Año de expiración"
+                    name="cardExpiryYear"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Debe el año de expiración de la tarjeta',
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Año"
+                      onChange={(value) => setCardYearExpiry(value)}
+                      onFocus={() => setCardFocus('expiry')}
+                      style={{ width: '90%' }}
+                      options={[
+                        { value: '23', label: '2023' },
+                        { value: '24', label: '2024' },
+                        { value: '25', label: '2025' },
+                        { value: '26', label: '2026' },
+                        { value: '27', label: '2027' },
+                        { value: '28', label: '2028' },
+                        { value: '29', label: '2029' },
+                        { value: '30', label: '2030' },
+                        { value: '31', label: '2031' },
+                        { value: '32', label: '2032' },
+                      ]}
+                    />
+                  </Item>
+                </div>
                 <Item
                   label="CVC"
                   name="cardCvc"
