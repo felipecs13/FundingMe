@@ -80,6 +80,14 @@ const FormProject = () => {
     form.resetFields()
   }
 
+  if (user.id === 0) { 
+    return (
+      <div>
+        <BigText>Debes iniciar sesión para crear proyectos</BigText>
+      </div>
+    )
+  }
+
   return (
     <Wrapper>
       <motion.div
@@ -511,5 +519,11 @@ const ButtonContainer = styled.div`
 const ButtonSubmit = styled(StyledButton)`
   width: 200px;
 `
+
+const BigText = styled.div`
+  font-size: 25px;
+  font-weight: 600;
+  padding: 1rem;
+  `
 
 export default FormProject

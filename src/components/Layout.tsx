@@ -7,11 +7,13 @@ import { useState, useEffect } from 'react'
 
 const Layout = () => {
   const [user, setUser] = useState(null)
+  const [admin, setAdmin] = useState(false)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       setUser(JSON.parse(storedUser))
+      setAdmin(JSON.parse(storedUser).is_admin)
     }
   }, [])
 
@@ -50,7 +52,7 @@ const Layout = () => {
           {user && <StyledLink to={'/new'}>Crear Proyecto</StyledLink>}
           {!user && <StyledLink to={'/login'}>Iniciar sesión</StyledLink>}
           {!user && <StyledLink to={'/register'}>Registrarse</StyledLink>}
-          {user && <StyledLink to={'/admin'}>Administrador</StyledLink>}
+          {admin && <StyledLink to={'/admin'}>Administrador</StyledLink>}
           {user && <StyledText onClick={logOut}>Cerrar sesión</StyledText>}
         </ContainerLinks>
       </Wrapper>
