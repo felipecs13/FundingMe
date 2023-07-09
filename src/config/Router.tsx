@@ -26,7 +26,7 @@ const Router = () => {
         },
         {
           path: 'project/:id',
-          element: <ProjectDetail />,
+          element: <ProjectDetail/>,
           errorElement: <NotFound />,
         },
         {
