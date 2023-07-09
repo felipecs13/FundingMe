@@ -102,9 +102,11 @@ const FormEditProject = () => {
     setLoading(true)
     try {
       console.log(values)
-      const photo = values.image?.fileList[0].originFileObj
       const formData = new FormData()
-      formData.append('project[image]', photo)
+      if (values.image) {
+        const photo = values.image?.fileList[0].originFileObj
+        formData.append('project[image]', photo)
+      }
       formData.append('project[name_project]', values.name_project)
       formData.append('project[bank_account]', values.bank_account)
       formData.append('project[description]', values.description)
@@ -217,12 +219,6 @@ const FormEditProject = () => {
                   <Item
                     label="Imágen"
                     name="image"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Debe ingresar una imagen para su proyecto',
-                      },
-                    ]}
                   >
                     <StyledUpload
                       beforeUpload={() => {
