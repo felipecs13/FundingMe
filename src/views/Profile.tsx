@@ -5,7 +5,6 @@ import { apiUrl } from '../styles/constants'
 import { Spin } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
-import NoImg from '../assets/no_image.jpg'
 import { message } from 'antd'
 import { IProfile } from '../helpers/interfaces'
 
@@ -59,11 +58,7 @@ const Profile = () => {
           </LoadingContainer>
         ) : (
           <>
-            <Title>Perfil</Title>
-            <Img
-              alt={dataUser.name}
-              src={dataUser.image || NoImg}
-            />
+            <Title>Datos</Title>
             <FieldInfo>
               <BoldText>Nombre</BoldText>
               <div>{dataUser.name}</div>
@@ -75,10 +70,6 @@ const Profile = () => {
             <FieldInfo>
               <BoldText>Rut</BoldText>
               <div>{dataUser.rut}</div>
-            </FieldInfo>
-            <FieldInfo>
-              <BoldText>Cuenta bancaria</BoldText>
-              <div>{dataUser.bankAccount || 'Sin cuenta bancaria guardada'}</div>
             </FieldInfo>
           </>
         )}
@@ -114,10 +105,6 @@ export const Title = styled(BigText)`
 
 const BoldText = styled.div`
   font-weight: bold;
-`
-
-const Img = styled.img`
-  width: 200px;
 `
 
 export default Profile

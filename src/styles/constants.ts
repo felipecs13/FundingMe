@@ -4,6 +4,7 @@ export const colors = {
   secondary: '#7ab317',
   fontColor: '#303236',
   backgroundCard: '#f5f5f5',
+  progressBackground: '#D2D2D2',
 }
 
 export const fonts = {
