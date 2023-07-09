@@ -36,3 +36,13 @@ export interface IProfile {
   rut: string
   bankAccount: string
 }
+
+export interface IComment {
+  id: number
+  user_id: number
+  project_id: number
+  comment_text: string
+  state: string
+  created_at: string
+  updated_at: string
+}
