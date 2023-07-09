@@ -17,9 +17,11 @@ interface AdminTableData {
   current_amount: number
 }
 
+
 const AdminTable = () => {
   const [data, setData] = useState<AdminTableData[]>([])
   const [user, setUser] = useState<IUser>({} as IUser)
+  const [usersData, setUsersData] = useState<IUser[]>([] as IUser[])
 
   const fetchData = async () => {
     const response = await fetch(apiUrl + '/projects/')
@@ -30,8 +32,16 @@ const AdminTable = () => {
       setUser(JSON.parse(storedUser))
     }
   }
+
+  const fetchUsersData = async () => {
+    const response = await fetch(apiUrl + '/users/')
+    const data = await response.json()
+    setUsersData(data)
+    console.log(data)
+  }
   useEffect(() => {
     fetchData()
+    fetchUsersData()
   }, [])
 
   const handleDelete = async (id: number) => {
@@ -59,6 +69,10 @@ const AdminTable = () => {
   
   const handleGoToProject = async (id: number) => {
     window.location.href = '/project/' + id
+  }
+
+  const handleGoToUser = async (id: number) => {
+    window.location.href = '/users/' + id
   }
 
   const approveProject = async (id: number) => {
@@ -176,6 +190,41 @@ const AdminTable = () => {
     },
   ]
 
+  const columnsUsers: ColumnsType<IUser> = [
+    {
+      dataIndex: 'id',
+      key: 'id',
+      title: 'Id',
+    },
+    {
+      dataIndex: 'email',
+      key: 'email',
+      title: 'Email',
+    },
+    {
+      dataIndex: 'rut',
+      key: 'crut',
+      title: 'RUT',
+    },
+    {
+      dataIndex: 'name',
+      key: 'name',
+      title: 'Nombre',
+    },
+    {
+      key: 'details',
+      render: (row) => (
+        <CustomButton
+          type="primary"
+          onClick={() => handleGoToUser(row.id)}
+        >
+          Ver Detalles
+        </CustomButton>
+      ),
+      title: 'Detalles',
+    },
+  ]
+
   return (
     (user.is_admin === true) ?(
       <Wrapper>
@@ -183,6 +232,11 @@ const AdminTable = () => {
         <Table
           columns={columns}
           dataSource={data}
+        />
+        <BigText>Gestión de usuarios</BigText>
+        <Table
+          columns={columnsUsers}
+          dataSource={usersData}
         />
       </Wrapper>
     )

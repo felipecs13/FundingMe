@@ -10,6 +10,7 @@ import Layout from '../components/Layout'
 import AdminTable from '../views/AdminTable'
 import MyProjects from '../views/MyProjects'
 import FormEditProject from '../views/EditProject'
+import UserDetails from '../views/UserDetails'
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -47,6 +48,11 @@ const Router = () => {
         {
           path: 'edit/:id',
           element: <FormEditProject />,
+          errorElement: <NotFound />,
+        },
+        {
+          path: 'users/:id',
+          element: <UserDetails />,
           errorElement: <NotFound />,
         },
         {
