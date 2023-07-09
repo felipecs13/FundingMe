@@ -25,6 +25,7 @@ const Profile = () => {
         throw new Error('Error')
       }
       const data = await response.json()
+      setUser(data)
       setDataUser({
         image: data.image_url,
         name: data.name,
