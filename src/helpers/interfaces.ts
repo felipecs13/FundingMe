@@ -27,6 +27,7 @@ export interface IUser {
   email: string
   rut: string
   name: string
+  is_admin: boolean
 }
 
 export interface IProfile {

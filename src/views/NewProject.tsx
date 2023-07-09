@@ -20,7 +20,7 @@ import { IUser } from '../helpers/interfaces'
 const FormProject = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState<boolean>(false)
-  const [user, setUser] = useState<IUser>({ token: '', id: 0, email: '', rut: '', name: '' })
+  const [user, setUser] = useState<IUser>({ token: '', id: 0, email: '', rut: '', name: '', is_admin: false })
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')

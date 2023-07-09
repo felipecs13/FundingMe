@@ -12,7 +12,7 @@ import { formatterNumber } from '../helpers/formatters'
 interface AdminTableData {
   id: number
   name_project: string
-  status: string
+  state_project: string
   goal_amount: number
   current_amount: number
 }
@@ -21,16 +21,16 @@ const AdminTable = () => {
   const [data, setData] = useState<AdminTableData[]>([])
   const [user, setUser] = useState<IUser>({} as IUser)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(apiUrl + '/projects/')
-      const data = await response.json()
-      setData(data)
-      const storedUser = localStorage.getItem('user')
-      if (storedUser) {
-        setUser(JSON.parse(storedUser))
-      }
+  const fetchData = async () => {
+    const response = await fetch(apiUrl + '/projects/')
+    const data = await response.json()
+    setData(data)
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
+  }
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -55,6 +55,28 @@ const AdminTable = () => {
 
   const handleEdit = async (id: number) => {
     window.location.href = '/edit/' + id
+  }
+  
+  const handleGoToProject = async (id: number) => {
+    window.location.href = '/project/' + id
+  }
+
+  const approveProject = async (id: number) => {
+    try{
+      const formData = new FormData()
+      formData.append('project[state_project]', 'ACTIVE')
+      fetch(`${apiUrl}/projects/${id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: user.token,
+          cors: 'cors',
+        },
+        body: formData,
+      })
+      fetchData()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const columns: ColumnsType<AdminTableData> = [
@@ -81,9 +103,30 @@ const AdminTable = () => {
       render: (value) => `$ ${formatterNumber(value)}`,
     },
     {
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'state_project',
+      key: 'state_project',
       title: 'Estado',
+      render: (value) => {
+        if (value === 'ACTIVE') {
+          return 'Activo'
+        }
+        if (value === 'REJECTED') {
+          return 'Rechazado'
+        }
+        return 'Pendiente'
+      }
+    },
+    {
+      key: 'details',
+      render: (row) => (
+        <CustomButton
+          type="primary"
+          onClick={() => handleGoToProject(row.id)}
+        >
+          Ver Detalles
+        </CustomButton>
+      ),
+      title: 'Detalles',
     },
     {
       key: 'edit',
@@ -96,6 +139,27 @@ const AdminTable = () => {
           Editar
         </CustomButton>
       ),
+    },
+    {
+      key: 'approve',
+      render: (row) => (
+        (row.state_project === 'PENDING') ? (
+        <CustomButton
+          type="primary"
+          onClick={() => approveProject(row.id)}
+        >
+          Aprobar proyecto
+        </CustomButton>
+        ) : (
+          <CustomButton
+            type="primary"
+            disabled
+          >
+            Aprobar proyecto
+          </CustomButton>
+        )
+      ),
+      title: 'Aprobar',
     },
     {
       key: 'delete',
@@ -112,13 +176,20 @@ const AdminTable = () => {
   ]
 
   return (
-    <Wrapper>
-      <BigText>Gestión de proyectos</BigText>
-      <Table
-        columns={columns}
-        dataSource={data}
-      />
-    </Wrapper>
+    (user.is_admin === true) ?(
+      <Wrapper>
+        <BigText>Gestión de proyectos</BigText>
+        <Table
+          columns={columns}
+          dataSource={data}
+        />
+      </Wrapper>
+    )
+    : (
+      <Wrapper>
+        <BigText>No tienes permisos para ver esta página</BigText>
+      </Wrapper>
+    )
   )
 }
 
