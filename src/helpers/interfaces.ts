@@ -47,3 +47,12 @@ export interface IComment {
   created_at: string
   updated_at: string
 }
+
+export interface IDonation {
+  id: number
+  user_id: number
+  project: Object
+  amount: number
+  created_at: string
+  updated_at: string
+}

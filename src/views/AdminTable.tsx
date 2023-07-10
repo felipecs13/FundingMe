@@ -37,7 +37,6 @@ const AdminTable = () => {
     const response = await fetch(apiUrl + '/users/')
     const data = await response.json()
     setUsersData(data)
-    console.log(data)
   }
   useEffect(() => {
     fetchData()
@@ -52,7 +51,6 @@ const AdminTable = () => {
           Authorization: user.token,
         },
       })
-      console.log(response)
       if (response.status !== 204) {
         throw new Error('Error')
       }
@@ -203,7 +201,7 @@ const AdminTable = () => {
     },
     {
       dataIndex: 'rut',
-      key: 'crut',
+      key: 'rut',
       title: 'RUT',
     },
     {
