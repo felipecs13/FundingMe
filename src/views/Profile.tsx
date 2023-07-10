@@ -2,17 +2,20 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { LoadingContainer } from './Dashboard'
 import { apiUrl } from '../styles/constants'
-import { Spin } from 'antd'
+import { Spin, Table } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
 import { message } from 'antd'
-import { IProfile, IUser } from '../helpers/interfaces'
+import { IProfile, IUser, IDonation } from '../helpers/interfaces'
+import type { ColumnsType } from 'antd/es/table'
+import { formatterNumber } from '../helpers/formatters'
 
 const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
   const [user, setUser] = useState<IUser>({} as IUser)
-
+  const [data, setDataDonations] = useState<IDonation[]>([] as IDonation[])
+  
   const getUserData = async (id: number, token: string) => {
     try {
       const response = await fetch(apiUrl + `/users/${id}`, {
@@ -41,17 +44,57 @@ const Profile = () => {
     }
   }
 
+  const getDonationsData = async (id:string, token: string) => {
+    try {
+      const response = await fetch(apiUrl + `/users/${id}/donations/`, {
+        method: 'GET',
+        headers: {
+          Authorization: token,
+        },
+      })
+      if (response.status !== 200) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      setDataDonations(data)
+      console.log(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const user = localStorage.getItem('user')
     if (user) {
       const parsedUser = JSON.parse(user)
       getUserData(parsedUser.id, parsedUser.token)
-    } else {
-      setLoading(false)
+      getDonationsData(parsedUser.id, parsedUser.token)
     }
   }, [])
 
-  if (Object.keys(user).length === 0 && !loading) {
+  const columns: ColumnsType<IDonation> = [
+    {
+      dataIndex: 'id',
+      key: 'id',
+      title: 'Id',
+    },
+    {
+      dataIndex: 'project',
+      key: 'project',
+      title: 'Nombre del proyecto',
+      render: (value) => (value.name_project),
+    },
+    {
+      dataIndex: 'amount',
+      key: 'amount',
+      title: 'Monto Donado',
+      render: (value) => `$ ${formatterNumber(value)}`,
+    },
+  ]
+
+  if (Object.keys(user).length === 0) { 
     return (
       <div>
         <BigText>Debes iniciar sesión para ver tu perfil</BigText>
@@ -86,6 +129,11 @@ const Profile = () => {
           </>
         )}
       </Card>
+      <BigText>Donaciones por {dataUser.name}</BigText>
+      <Table
+        columns={columns}
+        dataSource={data}
+      />
     </>
   )
 }

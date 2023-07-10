@@ -2,17 +2,21 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { LoadingContainer } from './Dashboard'
 import { apiUrl } from '../styles/constants'
-import { Spin } from 'antd'
+import { Spin, Table } from 'antd'
 import { BigText } from './Login'
 import { colors } from '../styles/constants'
 import { message } from 'antd'
-import { IProfile, IUser } from '../helpers/interfaces'
+import { IProfile, IUser, IDonation } from '../helpers/interfaces'
 import { useParams } from 'react-router-dom'
+import type { ColumnsType } from 'antd/es/table'
+import { formatterNumber } from '../helpers/formatters'
+
 
 const UserDetails = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
   const [user, setUser] = useState<IUser>({} as IUser)
+  const [data, setDataDonations] = useState<IDonation[]>([] as IDonation[])
   const params = useParams<{ id: string }>()
 
   const getUserData = async (id: string, token: string) => {
@@ -43,6 +47,26 @@ const UserDetails = () => {
     }
   }
 
+  const getDonationsData = async (id:string, token: string) => {
+    try {
+      const response = await fetch(apiUrl + `/users/${id}/donations/`, {
+        method: 'GET',
+        headers: {
+          Authorization: token,
+        },
+      })
+      if (response.status !== 200) {
+        throw new Error('Error')
+      }
+      const data = await response.json()
+      setDataDonations(data)
+    } catch (error) {
+      message.error('Error: problemas al cargar, intente más tarde.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const user = localStorage.getItem('user')
     if (user) {
@@ -50,9 +74,35 @@ const UserDetails = () => {
       const id = params ? params.id : ''
       if (id){
         getUserData(id, parsedUser.token)
+        getDonationsData(id, parsedUser.token)
       }
     }
   }, [])
+
+  const columns: ColumnsType<IDonation> = [
+    {
+      dataIndex: 'id',
+      key: 'id',
+      title: 'Id',
+    },
+    {
+      dataIndex: 'user_id',
+      key: 'user_id',
+      title: 'Id Usuario',
+    },
+    {
+      dataIndex: 'project',
+      key: 'project',
+      title: 'Nombre del proyecto',
+      render: (value) => (value.name_project),
+    },
+    {
+      dataIndex: 'amount',
+      key: 'amount',
+      title: 'Monto Donado',
+      render: (value) => `$ ${formatterNumber(value)}`,
+    },
+  ]
 
   if (Object.keys(user).length === 0) { 
     return (
@@ -89,6 +139,11 @@ const UserDetails = () => {
           </>
         )}
       </Card>
+      <BigText>Donaciones por {dataUser.name}</BigText>
+      <Table
+        columns={columns}
+        dataSource={data}
+      />
     </>
   )
 }
