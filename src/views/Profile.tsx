@@ -12,7 +12,6 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
   const [user, setUser] = useState<IUser>({} as IUser)
-  const [loadingGeneral, setLoadingGeneral] = useState<boolean>(true)
 
   const getUserData = async (id: number, token: string) => {
     try {
