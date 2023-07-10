@@ -41,7 +41,6 @@ const FormProject = () => {
     end_date: string
     category: string
   }) => {
-    console.log('Success:', values)
     setLoading(true)
     try {
       const photo = values.image?.fileList[0].originFileObj

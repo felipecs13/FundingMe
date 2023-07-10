@@ -139,11 +139,13 @@ const UserDetails = () => {
           </>
         )}
       </Card>
+      <Wrapper>
       <BigText>Donaciones por {dataUser.name}</BigText>
       <Table
         columns={columns}
         dataSource={data}
       />
+      </Wrapper>
     </>
   )
 }
@@ -175,6 +177,17 @@ export const Title = styled(BigText)`
 
 const BoldText = styled.div`
   font-weight: bold;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 40px;
+  padding: 40px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: ${colors.backgroundCard};
 `
 
 export default UserDetails
