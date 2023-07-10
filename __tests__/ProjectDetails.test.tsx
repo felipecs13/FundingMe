@@ -1,6 +1,5 @@
 import { render, fireEvent, waitFor, screen, prettyDOM } from '@testing-library/react';
 import ProjectDetail from '../src/views/ProjectDetail';
-import React from 'react';
 
 jest.mock('../src/assets/social_project.jpg', () => 'social_project.jpg');
 jest.mock('../src/assets/logo_green.png', () => 'logo_green.png');
