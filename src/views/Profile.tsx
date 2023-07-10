@@ -57,7 +57,6 @@ const Profile = () => {
       }
       const data = await response.json()
       setDataDonations(data)
-      console.log(data)
     } catch (error) {
       message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
@@ -166,5 +165,7 @@ export const Title = styled(BigText)`
 const BoldText = styled.div`
   font-weight: bold;
 `
+
+
 
 export default Profile

@@ -87,6 +87,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
 const CustomButton = styled(StyledButton)`
   margin: 0;
+  margin-top: 1rem;
 `
 
 const Wrapper = styled.div`

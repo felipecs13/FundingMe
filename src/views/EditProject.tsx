@@ -101,7 +101,6 @@ const FormEditProject = () => {
   }) => {
     setLoading(true)
     try {
-      console.log(values)
       const formData = new FormData()
       if (values.image) {
         const photo = values.image?.fileList[0].originFileObj
