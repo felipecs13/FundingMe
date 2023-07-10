@@ -40,8 +40,7 @@ export interface IProfile {
 
 export interface IComment {
   id: number
-  user_id: number
-  project_id: number
+  user_name: string
   comment_text: string
   state: string
   created_at: string

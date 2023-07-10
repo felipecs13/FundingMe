@@ -39,7 +39,7 @@ const MyProjects = () => {
   }, [])
 
   useEffect(() => {
-    if (user) {
+    if (user.id) {
       fetchProjects()
     }
   }, [user])
@@ -78,7 +78,7 @@ const MyProjects = () => {
     )
   })
 
-  if (Object.keys(user).length === 0) { 
+  if (Object.keys(user).length === 0) {
     return (
       <div>
         <BigText>Debes iniciar sesión para ver tus proyectos</BigText>
@@ -90,7 +90,7 @@ const MyProjects = () => {
     <div>
       <ViewContainer>
         {user && <BigText>Hola {user.name} 👋🏻</BigText>}
-        {!user && <BigText>Estos son tus proyectos</BigText>}
+        {user && <BigText>Estos son tus proyectos</BigText>}
         <BoldText>¡Aqui podrás revisar y editar tus proyectos! 🌱</BoldText>
         {loading && (
           <LoadingContainer>
@@ -117,13 +117,9 @@ const MyProjects = () => {
                     index={index}
                     key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
                     name={project.name_project}
+                    projectId={project.id}
+                    handleClick={handleClick}
                   />
-                  <Button
-                    onClick={() => handleClick(project.id)}
-                    key={index + filteredPriceRange[0] + filteredPriceRange[1] + filteredSearchText}
-                  >
-                    Editar
-                  </Button>
                 </div>
               ))}
               {filteredProjects.length === 0 && (
@@ -202,7 +198,7 @@ export const ViewContainer = styled.div`
 `
 
 export const ProjectsContainer = styled.div`
-  width: 70%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -234,6 +230,7 @@ export const FiltersContainer = styled(motion.div)`
   background-color: ${colors.backgroundCard};
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 `
 
 export const DashboardContainer = styled.div`
