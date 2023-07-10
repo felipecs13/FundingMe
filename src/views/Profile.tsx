@@ -46,10 +46,12 @@ const Profile = () => {
     if (user) {
       const parsedUser = JSON.parse(user)
       getUserData(parsedUser.id, parsedUser.token)
+    } else {
+      setLoading(false)
     }
   }, [])
 
-  if (Object.keys(user).length === 0) { 
+  if (Object.keys(user).length === 0 && !loading) {
     return (
       <div>
         <BigText>Debes iniciar sesión para ver tu perfil</BigText>

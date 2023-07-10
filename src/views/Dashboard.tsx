@@ -182,7 +182,7 @@ export const ViewContainer = styled.div`
 `
 
 export const ProjectsContainer = styled.div`
-  width: 70%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -214,6 +214,7 @@ export const FiltersContainer = styled(motion.div)`
   background-color: ${colors.backgroundCard};
   border-radius: 15px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 `
 
 export const DashboardContainer = styled.div`

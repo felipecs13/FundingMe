@@ -58,7 +58,7 @@ const calculateDateDiffIntoString = (date: string, endDate: string) => {
 }
 
 interface Props {
-  idProp?: string;
+  idProp?: string
 }
 
 const ProjectDetail = ({ idProp }: Props) => {
@@ -79,7 +79,7 @@ const ProjectDetail = ({ idProp }: Props) => {
 
   type Focused = 'name' | 'number' | 'expiry' | 'cvc' | ''
   const [cardFocus, setCardFocus] = useState<Focused>('')
-  const { id } = idProp ? {id : idProp} : useParams<Record<string, string>>()
+  const { id } = idProp ? { id: idProp } : useParams<Record<string, string>>()
   const [user, setUser] = useState<IUser>({} as IUser)
 
   const diffDays = calculateDateDiffIntoString(project.created_at, project.end_date)
@@ -102,12 +102,13 @@ const ProjectDetail = ({ idProp }: Props) => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`${apiUrl}/comments`)
+      const response = await fetch(`${apiUrl}/projects/${id}/comments`)
       if (response.status !== 200) {
         throw new Error('Error')
       }
       const data = await response.json()
-      setComments(data)
+      console.log(data)
+      setComments(data.comments)
     } catch (error) {
       message.error('Error: problemas al cargar, intente más tarde.')
     } finally {
@@ -248,7 +249,7 @@ const ProjectDetail = ({ idProp }: Props) => {
             (paymentStep && cardExpiry.length != 2) ||
             (paymentStep && cardYearExpiry.length != 2) ||
             (paymentStep && (cardExpiry + cardYearExpiry).length != 4) ||
-            (paymentStep && (parseInt(cardExpiry) < 7 && cardYearExpiry == '23')) ||
+            (paymentStep && parseInt(cardExpiry) < 7 && cardYearExpiry == '23') ||
             (paymentStep && cardCvc.length != 3),
         }}
         cancelButtonProps={{ disabled: loadingPayment }}
@@ -479,7 +480,7 @@ const ProjectDetail = ({ idProp }: Props) => {
                   (comment) =>
                     comment.state === 'ACTIVE' && (
                       <CommentBox key={comment.id}>
-                        <GreenText>{comment.user_id} comenta:</GreenText>
+                        <GreenText>{comment.user_name} comenta:</GreenText>
                         <Comment>{comment.comment_text}</Comment>
                       </CommentBox>
                     )
@@ -593,23 +594,22 @@ const ProjectDetail = ({ idProp }: Props) => {
             </DonationInfoRow>
             <DonationInfoRow>
               {user.id ? (
-              <DonateButton
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={showModal}
-              >
-                Donar
-              </DonateButton>
+                <DonateButton
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={showModal}
+                >
+                  Donar
+                </DonateButton>
               ) : (
-              <DonateButton
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => window.location.href = '/login'}
-              >
-                Donar
-              </DonateButton>
-              )
-              }
+                <DonateButton
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => (window.location.href = '/login')}
+                >
+                  Donar
+                </DonateButton>
+              )}
             </DonationInfoRow>
           </DonationInfo>
         </InfoSide>

@@ -2,66 +2,92 @@ import React from 'react'
 import styled from 'styled-components'
 import { colors } from '../styles/constants'
 import { motion } from 'framer-motion'
+import { StyledButton } from '../views/MyProjects'
 
 interface ProjectCardProps {
-  name: string;
-  description: string;
-  goalAmount: number;
-  collectedAmount: number;
-  image: string;
-  index: number;
-  id: number;
+  name: string
+  description: string
+  goalAmount: number
+  collectedAmount: number
+  image: string
+  index: number
+  id: number
+  handleClick?: (id: number) => void
+  projectId?: number
 }
 
 export const fixNumber = (number: number) => {
-    return number.toLocaleString('es-AR')
+  return number.toLocaleString('es-AR')
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ name, description, goalAmount, collectedAmount, image, index, id }) => {
-  const percentage = collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100
+const ProjectCard: React.FC<ProjectCardProps> = ({
+  name,
+  description,
+  goalAmount,
+  collectedAmount,
+  image,
+  index,
+  id,
+  handleClick,
+  projectId,
+}) => {
+  const percentage =
+    collectedAmount < goalAmount ? Math.round((collectedAmount / goalAmount) * 100) : 100
 
   return (
     <motion.div
-        animate={{ opacity: 1, y: 0, transition : { duration: 0.5, delay: index * 0.1 } }}
-        initial={{ opacity: 0, y: 50 }}
-        onClick={() => window.location.href = '/project/' + id}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.99 }}
+      animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: index * 0.1 } }}
+      initial={{ opacity: 0, y: 50 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.99 }}
     >
-        <Wrapper>
-        <ImageWrapper>
-            <img alt={name}
-src={image} />
+      <Wrapper>
+        <ImageWrapper onClick={() => (window.location.href = '/project/' + id)}>
+          <img
+            alt={name}
+            src={image}
+          />
         </ImageWrapper>
         <Content>
+          <div onClick={() => (window.location.href = '/project/' + id)}>
             <h2>{name}</h2>
-            <p className='project-description'>{description}</p>
-            {collectedAmount < goalAmount ?
-              <p>
-                  Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️
-              </p>
-            :
-              <p>
-                  Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉
-              </p>
-            }
-            {percentage > 10 &&
+            <p className="project-description">{description}</p>
+            {collectedAmount < goalAmount ? (
+              <p>Este proyecto necesita ${fixNumber(goalAmount)} pesos ⚒️</p>
+            ) : (
+              <p>Este proyecto ya fue financiado con ${fixNumber(goalAmount)} pesos 🎉</p>
+            )}
+            {percentage > 10 && (
               <ProgressBar>
                 <Progress percentage={percentage}>
-                    <ProgressLabel>{percentage}%</ProgressLabel>
+                  <ProgressLabel>{percentage}%</ProgressLabel>
                 </Progress>
               </ProgressBar>
-            }
-            {percentage <= 10 &&
+            )}
+            {percentage <= 10 && (
               <p>
-                  Este proyecto lleva un {percentage}% de su meta, y necesita ${fixNumber(goalAmount - collectedAmount)} pesos más para ser financiado.
+                Este proyecto lleva un {percentage}% de su meta, y necesita $
+                {fixNumber(goalAmount - collectedAmount)} pesos más para ser financiado.
               </p>
-            }
+            )}
+          </div>
+          {projectId && handleClick && (
+            <CustomButton
+              type="primary"
+              onClick={() => handleClick(projectId)}
+            >
+              Editar
+            </CustomButton>
+          )}
         </Content>
-        </Wrapper>
+      </Wrapper>
     </motion.div>
   )
 }
+
+const CustomButton = styled(StyledButton)`
+  margin: 0;
+`
 
 const Wrapper = styled.div`
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -86,7 +112,6 @@ const Wrapper = styled.div`
   }
   cursor: pointer;
   background-color: ${colors.backgroundCard};
-
 `
 
 const ImageWrapper = styled.div`
@@ -142,7 +167,7 @@ const Progress = styled.div<{ percentage: number }>`
 const ProgressLabel = styled.span`
   color: white;
   font-size: 0.75rem;
-  font-weight: 500; 
+  font-weight: 500;
   z-index: 1;
 `
 
