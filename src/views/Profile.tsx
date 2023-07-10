@@ -12,6 +12,7 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [dataUser, setDataUser] = useState<IProfile>({} as IProfile)
   const [user, setUser] = useState<IUser>({} as IUser)
+  const [loadingGeneral, setLoadingGeneral] = useState<boolean>(true)
 
   const getUserData = async (id: number, token: string) => {
     try {
@@ -46,10 +47,12 @@ const Profile = () => {
     if (user) {
       const parsedUser = JSON.parse(user)
       getUserData(parsedUser.id, parsedUser.token)
+    } else {
+      setLoading(false)
     }
   }, [])
 
-  if (Object.keys(user).length === 0) { 
+  if (Object.keys(user).length === 0 && !loading) {
     return (
       <div>
         <BigText>Debes iniciar sesión para ver tu perfil</BigText>
